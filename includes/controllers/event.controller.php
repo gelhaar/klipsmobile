@@ -11,8 +11,10 @@ class EventController{
 			throw new Exception("Nothing found");
 		}
 		
+		$formattedEvents = Event::format($events);
+		
 		render('event',array(
-			'events'	=> $events
+			'events'	=> $formattedEvents
 		));		
 	}
 }

@@ -14,7 +14,7 @@ require_once "includes/controllers/event.controller.php";
 
 
 // This will allow the browser to cache the pages of the store.
-
+header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: max-age=3600, public');
 header('Pragma: cache');
 header("Last-Modified: ".gmdate("D, d M Y H:i:s",time())." GMT");

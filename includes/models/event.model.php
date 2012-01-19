@@ -24,6 +24,15 @@ class Event{
 		// Returns an array of Event objects:
 		return $st->fetchAll(PDO::FETCH_CLASS, "Event");
 	}
+	
+	public static function format($events){
+	
+		$formattedEvents = $events;
+		
+		return $formattedEvents;
+	
+	}
+	
 }
 
 ?>
