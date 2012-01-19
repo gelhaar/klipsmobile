@@ -12,15 +12,15 @@ require_once "includes/main.php";
 
 try {
 
-	if($_GET['command']){
+	if($_GET['type'] && $_GET['command']){
 	
-		switch ($_GET['command']) {
+		switch ($_GET['type']) {
 			
-			case "getAllPeriodic":
+			case "event":
 				$c = new EventController();
 				break;
 				
-			case "GetPeriodicEventsFor":
+			case "building":
 				
 				break;
 				
@@ -30,7 +30,7 @@ try {
 	else if(empty($_GET)){
 		echo "Kein Command!";
 	}
-	else throw new Exception('Wrong page!');
+	else throw new Exception('Missing Parameters!');
 
 	$c->handleRequest($_GET['command']);
 }
