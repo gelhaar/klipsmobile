@@ -1,7 +1,10 @@
 $(document).ready() {
 	
 	//init module handler
+	handler = new moduleHandler();
 	
-	//load first module
+	//register modules
+	handler.registerModule("calendar", new calendar(handler, "insert container ID"));
+	//...
 	
 }
