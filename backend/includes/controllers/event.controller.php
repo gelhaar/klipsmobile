@@ -2,12 +2,14 @@
 
 /* This controller renders the event pages */
 
-class EventController{
-	public function handleRequest($command){
+class EventController
+{
+	public function handleRequest($command, $date = NULL)
+	{	
+		$events = Event::find($command, $date);
 		
-		$events = Event::find($command);
-		
-		if(empty($events)){
+		if(empty($events))
+		{
 			throw new Exception("Nothing found");
 		}
 		
@@ -18,6 +20,5 @@ class EventController{
 		));		
 	}
 }
-
 
 ?>

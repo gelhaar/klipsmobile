@@ -11,9 +11,9 @@ ini_set("display_errors",1);
 require_once "includes/main.php";
 
 try {
-
-	if($_GET['type'] && $_GET['command']){
 	
+	if($_GET['type'] && $_GET['command']) {
+
 		switch ($_GET['type']) {
 			
 			case "event":
@@ -23,16 +23,15 @@ try {
 			case "building":
 				
 				break;
-				
 		}
-	
 	}
 	else if(empty($_GET)){
 		echo "Kein Command!";
 	}
 	else throw new Exception('Missing Parameters!');
+	
+	$c->handleRequest($_GET['command'], $_GET['date']);
 
-	$c->handleRequest($_GET['command']);
 }
 catch(Exception $e) {
 	// Display the error page using the "render()" helper function:
