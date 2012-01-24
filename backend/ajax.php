@@ -21,12 +21,12 @@ try {
 				break;
 				
 			case "building":
-				
+				$c = new BuildingController();
 				break;
 		}
 	}
 	else if(empty($_GET)){
-		echo "Kein Command!";
+		throw new Exception('Missing Parameters!');
 	}
 	else throw new Exception('Missing Parameters!');
 	
