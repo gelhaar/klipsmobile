@@ -1,4 +1,4 @@
-var calendar = function(moduleHandler, containerID) {
+function calendar(moduleHandler, containerID) {
 	
 	var currentViewStart = null;
 	var currentViewEnd = null;
@@ -14,8 +14,8 @@ var calendar = function(moduleHandler, containerID) {
 	$.ajax({
 		async: false,
 		type: "POST",
-		url: "/KLIPS-Test/KLIPSServlet",
-		data: "req=getSemesterzeiten",
+		url: "../../backend/ajax.php?type=event",
+		data: "command=getSemesterzeiten",
 		dataType: "json",
 		success: function(data) {
 			semesterStart = new Date(data.startSemester);
@@ -27,8 +27,8 @@ var calendar = function(moduleHandler, containerID) {
 	$.ajax({
 		async: false,
 		type: "POST",
-		url: "/KLIPS-Test/KLIPSServlet",
-		data: "req=getPeriodicEvents",
+		url: "../../backend/ajax.php?type=event",
+		data: "req=getAllPeriodic",
 		dataType: "json",
 		success: function(data) {
 			periodicEvents = data.veranstaltungen;
@@ -84,13 +84,15 @@ var calendar = function(moduleHandler, containerID) {
 		    //render callback
 		    eventRender: function(event, element) {
 		    	renderEvent(event, element);
-		    }
+		    },
+		    
+		    theme: true
 	    });
 	
 	init = false;
 	calendar.fullCalendar('changeView', "agendaWeek"); //set to week-view
-			
-	function viewChangeHandler(view) {	
+	
+	function viewChangeHandler(view) {
 		if(init === false) {
 			
 			//save view span for the render functions
@@ -113,14 +115,16 @@ var calendar = function(moduleHandler, containerID) {
 		$.ajax({
 			async: false,
 			type: "POST",
-			url: "/KLIPS-Test/KLIPSServlet",
-			data: "req=getUniqueEvents",
+			url: "../backend/ajax.php?type=event",
+			data: "command=getUniqueByDate&date="+convertToYYYYMMDD(startDate)+"-"+covertToYYYYMMDD(endDate),
 			dataType: "json",
 			success: function(data) {
-				for ( var int = 0; int < data.kommentare.length; int++) {
-					commentaryMap[data.kommentare[int].id] = data.kommentare[int];
+				if(data.kommentare !=== undefined) {
+					for ( var int = 0; int < data.kommentare.length; int++) {
+						commentaryMap[data.kommentare[int].id] = data.kommentare[int];
+					}
+					renderUniqueEvents(data.veranstaltungen);
 				}
-				renderUniqueEvents(data.veranstaltungen);
 			}
 		});
 	}
@@ -156,9 +160,8 @@ var calendar = function(moduleHandler, containerID) {
 	 			var commentary = commentaryMap[event.id];
 	    		var commentaryContainer = $("<div id='kommentar"+event.id+"'>"+commentary.title+"</div>")
 			    	.css({
-			    		"color":"red",
+			    		"color":"red"
 			    	});
-	 			
 				$(element)
 					.css({
 			    		"outline":"solid red 2px",
@@ -171,18 +174,55 @@ var calendar = function(moduleHandler, containerID) {
 	function focusEvent(event) {
 		
 		//see if the element has a commentary
-		var kommentar = $("#kommentar"+event.id).html();
-		if(kommentar === null) {
-			kommentar = "keine";
+		var kommentar = "keine";
+		if(commentaryMap[event.id] !== undefined) {
+			kommentar = commentaryMap[event.id].title;
 		}
 		
+		//init links
+		var kommentarEditButton = $("<input type='button' class='clickable' value='bearbeiten'></input>")
+			.click(function(){
+				if($(this).val() === "bearbeiten") {
+					var currentCommentary = $(this).siblings(".kommentar").html();
+					var editField = $("<input type='text' value='"+currentCommentary+"'></input>");
+					$(this)
+						.val("ok")
+						.siblings(".kommentar").html(editField);
+				}
+				else if($(this).val() === "ok") {
+					var commentary = $($(this).siblings(".kommentar").children("input")).val();
+					
+					$(this)
+						.val("bearbeiten")
+						.siblings(".kommentar").html(commentary);
+					
+					//send commentary to server
+					
+					//update local commentary
+					var commentaryObject = new Object();
+					commentaryObject.title = commentary;
+					commentaryObject.id = event.id;
+					commentaryObject.type = "kommentar";
+					commentaryMap[event.id] = commentaryObject;
+					
+					//rerender to make changes visible
+					calendar.fullCalendar("rerenderEvents");
+				}
+			});
+		var kommentare = $("<div>Kommentare: <span class='kommentar'>"+kommentar+"</span></div>")
+			.append(kommentarEditButton);
+		
+		var goToMapButton = $("<input type='button' class='clickable' value='zeigen' disabled='disabled'></input>");
+		var location = $("<div>Geb&auml;ude: "+event.building+", Raum "+event.room+"</div>")
+			.append(goToMapButton);
+				
 		//init event element to display
 		var eventContainer = $("<div id='focusEventContainer'></div>")
 			.append("<div><b>"+event.title+"</b></div>")
 			.append("<div>Datum: "+convertToDateString(event.start)+"</div>")
 			.append("<div>Zeit: "+convertToTimeString(event.start)+" - "+convertToTimeString(event.end)+"</div>")
-			.append("<div>Geb&auml;ude: "+event.building+", Raum "+event.room+" <a href='#' class='clickable'>karte</a></div>")
-			.append("<div>Kommentare: <span class='kommentar'>"+kommentar+"</span> <a href='#' class='clickable'>bearbeiten</a></div>")
+			.append(location)
+			.append(kommentare)
 			.css({
 				"text-align": "left",
 				"font-family": "arial"
@@ -191,7 +231,8 @@ var calendar = function(moduleHandler, containerID) {
 		//show element in blockUI
 		$.blockUI({
 			message: eventContainer,
-			css: {"cursor": "default"}, 
+			theme: true,
+			css: {"cursor": "default", "width":"50%", "left":"25%"}, 
 			overlayCSS: {"cursor": "pointer"},
 			fadeIn: 500
 		});
@@ -203,14 +244,10 @@ var calendar = function(moduleHandler, containerID) {
 					evt.stopPropagation();
 					
 					//check if the click comes from outside of blockUI
-					if($(evt.target).parentsUntil(eventContainer).length > 0) {
-						
-						//check if click comes from nested clickable element (link) inside of blockUI, it should still be triggered
-						if(!$(evt.target).hasClass("clickable")) {
-							evt.preventDefault();
-							$("body").unbind("click");
-							$.unblockUI();
-						}
+					if($(eventContainer).has(evt.target).length === 0) {
+						evt.preventDefault();
+						$("body").unbind("click");
+						$.unblockUI();
 					}
 				});
 			},
