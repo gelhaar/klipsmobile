@@ -28,7 +28,7 @@ function calendar(moduleHandler, containerID) {
 		async: false,
 		type: "POST",
 		url: "../../backend/ajax.php?type=event",
-		data: "req=getAllPeriodic",
+		data: "command=getAllPeriodic",
 		dataType: "json",
 		success: function(data) {
 			periodicEvents = data.veranstaltungen;
@@ -119,7 +119,7 @@ function calendar(moduleHandler, containerID) {
 			data: "command=getUniqueByDate&date="+convertToYYYYMMDD(startDate)+"-"+covertToYYYYMMDD(endDate),
 			dataType: "json",
 			success: function(data) {
-				if(data.kommentare !=== undefined) {
+				if(data.kommentare !== undefined) {
 					for ( var int = 0; int < data.kommentare.length; int++) {
 						commentaryMap[data.kommentare[int].id] = data.kommentare[int];
 					}

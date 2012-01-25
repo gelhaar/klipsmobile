@@ -5,10 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KLIPSmobile</title>
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
-<link rel="stylesheet" href="css/navbar.css" />
-<link rel="stylesheet" href="css/KLIPStheme.min.css" />
+<link rel="stylesheet" href="../css/navbar.css" />
+<link rel="stylesheet" href="../css/KLIPStheme.min.css" />
+<link rel="stylesheet" href="../css/fullcalendar.css" />
 <script src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>
+<script src="../js/lib/fullcalendar.min.js"></script>
+<script src="../js/modules/moduleHandler.js"></script>
+<script src="../js/modules/calendar/calendar.js"></script>
+<script src="../js/main.js"></script>
 </head>
 <body>
  	<div data-role="page" data-theme="a" id="aktuelles">
@@ -35,7 +40,7 @@
  	
  	<div data-role="page" data-theme="a" id="kalender" >
   	<div data-role="header" class="KMheader" data-icon="custom"><h1>KLIPSmobile</h1></div>
-  		<div data-role="content"><p>Kalender</p>
+  		<div data-role="content"><div id="calendarContainer">Kalender</div>
   		</div>
 	<div data-role="footer" data-position="fixed" class="nav-klips" data-theme="a">
 		<div data-role="navbar" class="nav-klips" data-grid="b">
