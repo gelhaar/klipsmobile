@@ -16,9 +16,10 @@ class Event{
 	public static function find($command, $date = NULL)
 	{	
 		global $db;
+		$user = "jschopha"; 	//testuser
 		
 		switch($command)
-		{
+		{			
 			case 'getSemesterzeiten':
 				$dt = date("Ymd", time());
 				$st = $db->prepare(
@@ -60,7 +61,6 @@ class Event{
 				//SELECT veranstaltungen.*
 				
 			case 'getUniqueByDate':
-				$user = "jschopha"; 	//testuser
 				list($date1, $date2) = explode("-", $date);
 				$date1 = convertDate($date1);
 				$date2 = convertDate($date2);
@@ -89,6 +89,10 @@ class Event{
 					"selectedZus"	=>  $selZus
 				);
 				break;
+				
+				case 'md5test':
+					echo md5($date);
+					exit;
 								
 			default:
 				throw new Exception("Unsupported property!");

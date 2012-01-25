@@ -11,9 +11,8 @@ ini_set("display_errors",1);
 require_once "includes/main.php";
 
 try {
-	
-	if($_GET['type'] && $_GET['command']) {
-
+	if($_GET['type'] && $_POST['command']) {
+		
 		switch ($_GET['type']) {
 			
 			case "event":
@@ -25,12 +24,12 @@ try {
 				break;
 		}
 	}
-	else if(empty($_GET)){
+	else if(empty($_POST)){
 		throw new Exception('Missing Parameters!');
 	}
 	else throw new Exception('Missing Parameters!');
 	
-	$c->handleRequest($_GET['command'], $_GET['date']);
+	$c->handleRequest($_POST['command'], $_POST['date']);
 
 }
 catch(Exception $e) {
