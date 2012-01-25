@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KLIPSmobile</title>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
+<link rel="stylesheet" href="../css/navbar.css" />
+<link rel="stylesheet" href="../css/KLIPStheme.min.css" />
+<link rel="stylesheet" href="../css/fullcalendar.css" />
+<script src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>
+<script src="../js/lib/jquery.blockUI.js"></script>
+<script src="../js/lib/fullcalendar.min.js"></script>
+<script src="../js/modules/moduleHandler.js"></script>
+<script src="../js/modules/calendar/calendar.js"></script>
+<script src="../js/main.js"></script>
+</head>
+<body>
+ 	<div data-role="page" data-theme="a" id="aktuelles">
+  	<div data-role="header" class="header-klips" data-icon="custom"><h1>KLIPSmobile</h1></div>
+  		<div data-role="content">
+  			<div data-role="collapsible" data-collapsed="false">
+     		<h3>Nächster Termin</h3>
+     		<div><p>irgendwie hier was rein</p></div>
+ 			</div>
+ 			<div data-role="collapsible" data-collapsed="false">
+     		<h3>Erinnerungen</h3>
+     		<div><p>und hier auch</p></div>
+ 			</div>
+  		</div>
+	<div data-role="footer" data-position="fixed" class="nav-klips">
+		<div data-role="navbar" class="nav-klips" data-grid="b">
+		<ul>
+			<li><a href="#aktuelles" id="akt" data-icon="custom" class="ui-btn-active ui-state-persist">Aktuelles</a></li>
+			<li><a href="#kalender" id="kalndr" data-icon="custom">Kalender</a></li>
+			<li><a href="#maps" id="mps" data-icon="custom">Maps</a></li>
+		</div>
+	</div>
+ 	</div>
+ 	
+ 	<div data-role="page" data-theme="a" id="kalender" >
+  	<div data-role="header" class="KMheader" data-icon="custom"><h1>KLIPSmobile</h1></div>
+  		<div data-role="content"><div id="calendarContainer"></div>
+  		</div>
+	<div data-role="footer" data-position="fixed" class="nav-klips" data-theme="a">
+		<div data-role="navbar" class="nav-klips" data-grid="b">
+		<ul>
+			<li><a href="#aktuelles" id="akt" data-icon="custom">Aktuelles</a></li>
+			<li><a href="#kalender" id="kalndr" data-icon="custom" class="ui-btn-active ui-state-persist">Kalender</a></li>
+			<li><a href="#maps" id="mps" data-icon="custom">Maps</a></li>
+		</div>
+	</div>
+ 	</div>
+ 	
+ 	<div data-role="page" data-theme="a" id="maps">
+  	<div data-role="header" class="KMheader" data-icon="custom"><h1>KLIPSmobile</h1></div>
+  		<div data-role="content"><p>Maps</p></div>
+	<div data-role="footer" data-position="fixed" class="nav-klips" data-theme="a">
+		<div data-role="navbar" class="nav-klips" data-grid="b"> <!-- data-grid "b" für 3-spaltige ansicht-->
+		<ul>
+			<li><a href="#aktuelles" id="akt" data-icon="custom">Aktuelles</a></li>
+			<li><a href="#kalender" id="kalndr" data-icon="custom">Kalender</a></li>
+			<li><a href="#maps" id="mps" data-icon="custom" class="ui-btn-active ui-state-persist">Maps</a></li>
+		</div>
+	</div>
+ 	</div>
+</body>
+</html>
