@@ -38,6 +38,31 @@ function convertDate($date)
 		 (int)substr($date,0,4)));
 }
 
+function convertDateToYYYYMMDD($date)
+{
+	//Konvertiert YYYYMMDD nach YYYY/MM/DD
+	
+	return date("Y/m/d", mktime(0, 0, 0,
+		 (int)substr($date,4,2),
+		 (int)substr($date,6,2),
+		 (int)substr($date,0,4)));
+}
+
+function dateStripSlashes($date)
+{
+	//Konvertiert YYYY/MM/DD to YYYYMMDD
+	
+	return date("Ymd", mktime(0, 0, 0,
+		 (int)substr($date,5,2),
+		 (int)substr($date,8,2),
+		 (int)substr($date,0,4)));
+}
+
+function convertTime($time)
+{
+	return substr($time,0,2).".".substr($time,2,2);
+}
+
 function convertToISO($date, $time)
 {
 	return date("Y-m-d\TH:i:s", mktime(

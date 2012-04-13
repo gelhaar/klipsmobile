@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="de">
+<head>
+<title>KLIPSmobile - Login</title>
+<link rel="stylesheet" href="css/jquery.mobile-1.1.0-rc.2.min.css" />
+<link rel="stylesheet" href="css/jquery.mobile.structure-1.1.0-rc.2.min.css" />
+<link rel="stylesheet" href="css/KLIPSmobile-theme.min.css" />
+<link rel="stylesheet" href="css/login.css" />
+<script src="js/lib/jquery-1.7.2.min.js"></script>
+<script src="js/lib/jquery.mobile-1.1.0-rc.2.min.js"></script>
+</head>
+<body>
+<div data-role="page" id="loginContainer">
+
+	<div data-role="header">
+		<h1>Login</h1>
+	</div>
+
+	<div data-role="content">
+	
+		<form action="../backend/auth/login.php" method="post" data-ajax="false">
+
+			<div data-role="fieldcontain">
+			    <label for="username">Username:</label>
+			    <input type="text" name="username" id="username"  />
+			</div>	
+
+			<div data-role="fieldcontain">
+			    <label for="password">Password:</label>
+			    <input type="password" name="password" id="password" />
+			</div>	
+
+			<input type="submit" name="login" value="Login"/>
+		</form>
+			
+	</div>
+
+	<div data-role="footer">
+		<h4>KLIPSmobile</h4>
+		<div id="about">ein Projekt von Roman Quiring, Benjamin Gelhaar und Jonas Schophaus</div>
+	</div>
+
+</div>
+
+</body>
+
+</html>
