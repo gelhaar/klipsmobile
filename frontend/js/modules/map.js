@@ -8,19 +8,22 @@ function map() {
 	var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers : true});
 	
 	var marker = null;
-//	var infoWindow = new google.maps.InfoWindow();
+	var infoWindow = new google.maps.InfoWindow();
 	
-	var zoom = 17;
+	var defaultZoom = 17;
 	
+	var markerToShow;
 	
-	//KONSTRUKTOR
+	var init = true; //wird fürs erste Rendering gebraucht
 	
-	if (typeof(_map_prototype_called) == "undefined")
-	{
+	//Konstruktor
+	if (typeof(_map_prototype_called) == "undefined") {
 		_map_prototype_called = true;
 		map.prototype.render = render;
 		map.prototype.initMapView = initMapView;
-		map.prototype.showBuilding2 = showBuilding2;
+		map.prototype.showBuilding = showBuilding;
+		
+		map.prototype.getBuilding = getBuilding;
 		
 		initBuildings();
 	}
@@ -38,61 +41,127 @@ function map() {
 		});
 	}
 	
-	function initMapView() { //TODO
-		
-		initBuildingSelect();
+	function getBuilding(id) {
+		for (var int = 0; int < buildings.length; int++) {
+			var building = buildings[int];
+			if(building.id === id)
+				return building;
+		}
 	}
 	
-	var init = true;
+	function initMapView() {
+		
+		//buildings
+		for (var int = 0; int < buildings.length; int++) {
+			var building = buildings[int];
+			$("#buildingSelect").append("<option value='"+building.id+"'>"+building.name+"</option>");
+		}
+		
+		$("#buildingSelect").change(function(){
+			showBuilding($(this).val());
+			render();
+			
+			$("#directionsButton").removeClass("ui-disabled");
+
+			resetSelectMenu("mensa");
+			
+			directionsDisplay.setMap(null);
+		});
+		
+		//mensen
+		var mensen = mensa.getMensen();
+		for (var int = 0; int < mensen.length; int++) {
+			var singleMensa = mensen[int];
+			$("#mensaSelect").append("<option value='"+singleMensa.id+"'>"+singleMensa.name+"</option>");
+			$("#mensaSelect").val($("#mensaSelect option:first").val());
+		}
+		
+		$("#mensaSelect").change(function(){
+			showMensa($(this).val());
+			render();
+			$("#directionsButton").removeClass("ui-disabled");
+			
+			resetSelectMenu("building");
+			
+			directionsDisplay.setMap(null);;
+		});
+		
+		//directions
+		$("#travelModeSelect").change(function() {
+			getDirectionsToBuildingOrMensa();
+		});
+		
+		$("#directionsButton").live("tap", function(){ //TODO button weg! nur menü!
+			var textElement = $(this).find(".ui-btn-text");
+			if(textElement.text() === "Weg zeigen") {
+				getDirectionsToBuildingOrMensa();
+				$(textElement).text("verbergen");
+			}
+			else { //reset
+				$(textElement).text("Weg zeigen");
+				directionsDisplay.setMap(null);
+				$(this).addClass("ui-disabled");
+				resetSelectMenu();
+			}
+		});
+	}
 	
-	function render() { //TODO
+	/**
+	 * Hilfsfunktion für initMapView().
+	 * @param menu String "building" oder "mensa". Wenn nicht angegeben, werden beide Menüs zurückgesetzt.
+	 */
+	function resetSelectMenu(menu) {
+		if(menu === "building") {
+			$("#buildingSelect option:selected").removeAttr("selected");
+			$("#buildingSelect option:first").attr("selected", "selected");
+			$("#buildingSelect").selectmenu("refresh");
+		}
+		else if(menu === "mensa") {
+			$("#mensaSelect option:selected").removeAttr("selected");
+			$("#mensaSelect option:first").attr("selected", "selected");
+			$("#mensaSelect").selectmenu("refresh");
+		}
+		else {
+			$("#buildingSelect option:selected").removeAttr("selected");
+			$("#buildingSelect option:first").attr("selected", "selected");
+			$("#buildingSelect").selectmenu("refresh");
+			$("#mensaSelect option:selected").removeAttr("selected");
+			$("#mensaSelect option:first").attr("selected", "selected");
+			$("#mensaSelect").selectmenu("refresh");
+		}
+	}
+	
+	function render() {
 		
 		if(init) {
 			initMap();
-			showBuilding($("#buildingSelect").val());
+//			showBuilding($("#buildingSelect").val());
 			init = false;
 		}
 		
-		if(b !== undefined) {
-			console.log("render b");
-			showBuilding(b);
-			$("#buildingSelect").val(b);
-			$("#buildingSelect").selectmenu("refresh");
+		if(markerToShow !== undefined) {
+			var latLng = new google.maps.LatLng(markerToShow.latitude, markerToShow.longitude);
+			showMarker(latLng, markerToShow.name);
+			
+			if(markerToShow.type === "building") {
+				$("#buildingSelect").val(markerToShow.id); 
+				$("#buildingSelect").selectmenu("refresh");
+			}
+			else if(markerToShow.type === "mensa") {
+				$("#mensaSelect").val(markerToShow.id);
+				$("#mensaSelect").selectmenu("refresh");
+			}
+			
+			markerToShow = undefined;
 		}
 		
 		google.maps.event.trigger(gMap, "resize");
 	};
-	
-	function initBuildingSelect() {
-		for (var int = 0; int < buildings.length; int++) {
-			var building = buildings[int];
-			$("#buildingSelect").append("<option value='"+building.name+"'>"+building.name+"</option>");
-		}
-		$("#buildingSelect").change(function(){
-			showBuilding($(this).val());
-		});
-		
-		$("#travelModeSelect").change(function() {
-			getRouteToBuilding($("#buildingSelect").val(), $("#travelModeSelect").val());
-		});
-		
-		$("#directionsButton").live("tap", function(){
-			var textElement = $(this).find(".ui-btn-text");
-			if(textElement.text() === "Weg zeigen") {
-				getRouteToBuilding($("#buildingSelect").val(), $("#travelModeSelect").val());
-				$(textElement).text("verbergen");
-			}
-			else {
-				$(textElement).text("Weg zeigen");
-				directionsDisplay.setMap(null);
-				showBuilding($("#buildingSelect").val());
-			}
-		});
-	}
+
 
 	function initMap() {
 	    var mapOptions = {
-	      zoom: zoom,
+	      zoom: defaultZoom,
 	      center: initialLocation,
 	      mapTypeId: google.maps.MapTypeId.ROADMAP,
 	      disableDefaultUI: true
@@ -102,37 +171,33 @@ function map() {
 	    gMap = new google.maps.Map($("#mapContainer")[0], mapOptions);
 	}
 	
-	/**
-	 * Helper function
-	 * @param buildingName
-	 */
-	function getBuilding(buildingName) {
-		for (var int = 0; int < buildings.length; int++) {
-			if(buildings[int].name === buildingName)
-				return buildings[int];
-		}
-	}
-
-	var b;
-	
-	function showBuilding2(buildingName) { //TODO
-//		console.log("show b");
-//		initialLocation = new google.maps.LatLng(58.928256, 6.929184);
-////		$("#buildingSelect").children("option:selected").removeAttr("selected");
-//		$("#buildingSelect").val(buildingName);
-//		$("#buildingSelect").selectmenu("refresh");
+	function showBuilding(id) {
+		var building = getBuilding(id);
 		
-		b = buildingName;
+		markerToShow = new Object();
+		markerToShow.type = "building";
+		markerToShow.id = id;
+		markerToShow.name = building.name;
+		markerToShow.latitude = building.latitude;
+		markerToShow.longitude = building.longitude;
 	}
 	
-	function showBuilding(buildingName) {
+	function showMensa(id) {
+		var singleMensa = mensa.getMensa(id);
 		
-		var building = getBuilding(buildingName);
-
-		var latLng = new google.maps.LatLng(building.latitude, building.longitude);
+		markerToShow = new Object();
+		markerToShow.type = "mensa";
+		markerToShow.id = id;
+		markerToShow.name = singleMensa.name;
+		markerToShow.latitude = singleMensa.latitude;
+		markerToShow.longitude = singleMensa.longitude;	
+	}
+	
+	function showMarker(latLng, title, window) {
 		
-		gMap.setZoom(zoom);
-		gMap.panTo(latLng);			
+		var showWindow = window === undefined || window === null ? true : false;
+		gMap.setZoom(defaultZoom);
+		gMap.panTo(latLng);		
 		
 		if(marker !== null)
 			marker.setMap(null);
@@ -140,52 +205,64 @@ function map() {
 		marker = new google.maps.Marker({
 		    position: latLng, 
 		    map: gMap,
-		    title: building.name,
+		    title: title,
 		    bounds: true
 		});
 		
-//		infoWindow.setContent(building.name);
-//		infoWindow.close();
-//		infoWindow.open(map, marker);
+//		if(showWindow) { //TODO wtf
+//			infoWindow.setContent(title);
+//			infoWindow.close();
+//			infoWindow.open(map, marker);
+//		}
 	}
+	
+	function getDirectionsToBuildingOrMensa() {
 
-	function getRouteToBuilding(buildingName, travelMode) {
+		var latLng = null;
+		if(parseInt($("#buildingSelect").val())) {
+			var building = getBuilding($("#buildingSelect").val());
+			latLng = new google.maps.LatLng(building.latitude, building.longitude);
+		}
+		else if(parseInt($("#mensaSelect").val())) {
+			var singleMensa = mensa.getMensa($("#mensaSelect").val());
+			latLng = new google.maps.LatLng(singleMensa.latitude, singleMensa.longitude);
+		}
+		
+		if(latLng != null) {
+		
+			var travelMode;
+			if($("#travelModeSelect").val() === "car")
+				travelMode = google.maps.DirectionsTravelMode.DRIVING;
+			else
+				travelMode = google.maps.DirectionsTravelMode.WALKING;
+			
+			getDirectionsToLatLng(latLng, travelMode);
+		}
+	}
+	
+	function getDirectionsToLatLng(latLng, travelMode) {
 
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(position) {
-				var from = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-				var building = getBuilding(buildingName);
-				var to = new google.maps.LatLng(building.latitude, building.longitude);
+				var origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 				
-				var mode;
-				if(travelMode === "foot")
-					mode = google.maps.DirectionsTravelMode.WALKING;
-				else
-					mode = google.maps.DirectionsTravelMode.DRIVING;
-				
-				showRoute(from, to, mode);
+				var request = {
+				        origin: origin, 
+				        destination: latLng,
+				        travelMode: travelMode
+				    };
+					
+			    directionsService.route(request, function(response, status) {
+			    	if (status == google.maps.DirectionsStatus.OK) {
+			    		directionsDisplay.setMap(gMap);
+			    		directionsDisplay.setDirections(response);
+			    	}
+			    });
 			}, function(error) {
-				//TODO handle errors
 				alert(error);
 			});
 		}
 		
-	}
-	
-	function showRoute(from, to, mode) {
-		
-		var request = {
-	        origin: from, 
-	        destination: to,
-	        travelMode: mode
-	    };
-		
-	    directionsService.route(request, function(response, status) {
-	    	if (status == google.maps.DirectionsStatus.OK) {
-	    		directionsDisplay.setMap(gMap);
-	    		directionsDisplay.setDirections(response);
-	    	}
-	    });
 	}
 	
 }

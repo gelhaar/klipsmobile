@@ -7,3 +7,7 @@
 .ui-footer .ui-title {
 	margin-bottom: 0;
 }
+
+input {
+	background-color: #ffffff !important;
+}

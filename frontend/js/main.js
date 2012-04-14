@@ -7,14 +7,16 @@ var init = true;
 $(document).live("mobileinit", function(){
 	
 	//override defaults
-	$.mobile.dialog.prototype.options.closeBtnText = "Schlie&szlig;en";
+	$.mobile.dialog.prototype.options.closeBtnText = "Schließen";
 	$.mobile.loadingMessage = "Lade...";
 //	$.mobile.ajaxLinksEnabled = false; //wichtig für login-formular
 //	$.mobile.hashListeningEnabled = false; //reload führt zur startseite
 	
 	//module pre-init
 	dateHelper = new dateHelper();
+	session = new session();
 	dates = new dates();
+	mensa = new mensa();
 	map = new map();
 	schedule = new schedule();
 	start = new start();
@@ -55,6 +57,15 @@ $(document).live("mobileinit", function(){
 			$("#map").trigger("updatelayout");
 			map.render();
 		});
+	
+	$("#mensa")
+		.live("pagecreate", function() {
+			mensa.initMensaView();
+		})
+		.live("pageshow", function() {
+			$("#mensa").height(getContentHeight());
+			$("#mensa").trigger("updatelayout");
+		});
 
 	$("#dates")
 		.live("pagecreate", function(){
@@ -69,8 +80,11 @@ $(document).live("mobileinit", function(){
 
 	//init username + logout-bar
 	$(window).one("pagecreate", function() {
-		login();
+		session.initUsername();
 	});
+	
+	//ping 
+	setInterval(session.ping, 60000);
 });
 
 

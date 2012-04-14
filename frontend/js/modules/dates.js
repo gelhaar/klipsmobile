@@ -98,10 +98,9 @@ function dates() {
 			var holiday = holidays[int];
 			
 			if(holiday.endDate !== undefined) {
-				if(holiday.endDate.getTime() < maxTime)
+				if(holiday.endDate.getTime() >= currentTime && holiday.endDate.getTime() < maxTime)
 					upcomingEvents.push(holiday);
 			}
-			
 			else if(holiday.date.getTime() >= currentTime && holiday.date.getTime() < maxTime)
 				upcomingEvents.push(holiday);
 		}

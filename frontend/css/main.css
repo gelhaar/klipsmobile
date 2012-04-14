@@ -149,12 +149,32 @@
 }
 
 
+/* MENSA */
+
+.menuName {
+	font-weight: bold;
+}
+
+.price {
+/* 	margin-bottom: 0.5em;	 */
+}
+
+.mensaMenu .meal:last-child .price {
+/* 	margin-bottom: 0; */
+}
+
+
 /* KARTE */
 
 #mapOptions { /* Hack -> outerHeight() */
 /* 	border-bottom: solid #ffffff 0.5em; */
-height: 2.5em;
+	height: 5.5em;
 /* margin: 0; */
+	text-align: center;
+}
+
+#mapOptions .ui-block-a {
+	text-align: left;
 }
 
 #mapOptions .ui-block-b {

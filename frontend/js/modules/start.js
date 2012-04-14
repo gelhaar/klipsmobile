@@ -14,12 +14,18 @@ function start() {
 		
 		var lectures = schedule.getNextLectures();
 		
+		if(lectures.length === 0) {
+			$("<li><div>keine Veranstaltungen in den kommenden 3 Tagen</div></li>").appendTo(eventList);
+		}
+		
 		for (var int = 0; int < lectures.length; int++) {
 			var lecture = lectures[int];
 
 			var day;
 			if(lecture.start.getDay() === new Date().getDay())
 				day = "heute";
+			else if(lecture.start.getDay() === new Date().getDay() + 1)
+				day = "morgen";
 			else
 				day = dateHelper.getWeekDayString(lecture.start);
 			
@@ -40,8 +46,7 @@ function start() {
 			}
 			
 			$(lectureEntry)
-				.data("lecture", lecture) //TODO muss das sein?
-//				.unbind("tap")
+				.data("lecture", lecture)
 				.bind("tap", function() {
 					schedule.showLecture($(this).data("lecture"));
 				})
@@ -52,6 +57,11 @@ function start() {
 		$(eventList).append("<li data-role='list-divider'>Termine:</li>");
 		
 		var nextDates = dates.getNextDates();
+		
+		if(nextDates.length === 0) {
+			$("<li><div>keine Termine in den kommenden 3 Tagen</div></li>").appendTo(eventList);
+		}
+		
 		for (var int = 0; int < nextDates.length; int++) {
 			var date = nextDates[int];
 			

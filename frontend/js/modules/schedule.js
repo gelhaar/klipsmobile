@@ -7,6 +7,7 @@ function schedule() {
 	
 	var calendar;
 
+	//Konstruktor
 	if(typeof(_schedule_prototype_called) === "undefined") {
 		_schedule_prototype_called = true;
 		schedule.prototype.initScheduleView = initScheduleView;
@@ -55,18 +56,18 @@ function schedule() {
 		initSchedule();
 		
 		$("#nextDayButton").live("tap", function(){
-			calendar.fullCalendar('next');
-			$(".lectureEvent").width($(".fc-day-content").width());
+			calendar.fullCalendar("next");
 		});
 		$("#previousDayButton").live("tap", function(){
-			calendar.fullCalendar('prev');
-			$(".lectureEvent").width($(".fc-day-content").width());
+			calendar.fullCalendar("prev");
 		});
 		$("#weekViewButton").live("tap", function(){
-			if(calendar.fullCalendar("getView").name === "agendaDay")
+			if(calendar.fullCalendar("getView").name === "agendaDay") {
 				calendar.fullCalendar("changeView", "agendaWeek");
-			else
+			}
+			else {
 				calendar.fullCalendar("changeView", "agendaDay");
+			}
 		});
 	}
 	
@@ -76,27 +77,29 @@ function schedule() {
 	
 			//Regionale Einstellungen
 			firstDay: 1,
-			dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
-			dayNamesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
-			monthNames:['Januar', 'Februar', 'M&auml;rz', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-			monthNamesShort : ['Jan', 'Feb', 'M&auml;r', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
-			buttonText: {
-				today: 'heute',
-				month: 'Monat',
-				week: 'Woche',
-				day: 'Tag'
-			},
-			titleFormat: {
-				month: 'MMMM yyyy',
-				week: "d[ yyyy]{ '&#8212;'[ MMM] d MMM yyyy}",
-				day: 'dddd, d. MMM yyyy'
-			},
+			dayNames: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+			dayNamesShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
 			columnFormat: {
-				month: 'ddd',
-				week: 'ddd d.M',
+				month: "ddd",
+				week: "ddd d.M",
 				day: "dddd d.M."
 			},
 			timeFormat: 'H:mm',
+			
+			//TODO kann raus
+//			monthNames:["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+//			monthNamesShort : ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+//			buttonText: {
+//				today: "heute",
+//				month: "Monat",
+//				week: "Woche",
+//				day: "Tag"
+//			},
+//			titleFormat: {
+//				month: "MMMM yyyy",
+//				week: "d[ yyyy]{ '&#8212;'[ MMM] d MMM yyyy}", // - TODO
+//				day: "dddd, d. MMM yyyy"
+//			},
 	
 			//header
 			header: false,
@@ -104,9 +107,9 @@ function schedule() {
 			allDaySlot: true, 
 			allDayText: "",
 			
-			contentHeight: 1000, //large value prevents scrollbar
+			contentHeight: 1000, //großer Wert unterdrückt Scrollbar
 
-			//TODO scrollbar-hack
+			//TODO scrollbar-hack, benötigt?
 //			viewDisplay: function(view) {
 //				var n = view.name;
 //				var body_h = $('div.fc-view-'+n+' > div > div > div').height();
@@ -130,6 +133,11 @@ function schedule() {
 			eventRender: function(event, element) {
 				renderEvent(event, element);
 			},
+		
+			//view change callback
+			viewDisplay: function(view) { // "strecken" der Einträge auf 100% Breite
+				$(".lectureEvent").width($(".fc-col0:visible").width());
+			}
 	
 		});
 	
@@ -274,8 +282,8 @@ function schedule() {
 						"</td>" +
 					"</tr>")
 			.append("<tr>" +
-						"<td class='lectureDetailsCaption'>Geb&auml;ude:</td>" +
-						"<td id='building'>"+lecture.building+"</td>" +
+						"<td class='lectureDetailsCaption'>Gebäude:</td>" +
+						"<td>"+map.getBuilding(lecture.building).name+"</td>" +
 						"<td>" +
 							"<a href='#map' id='goToBuildingButton' data-role='button' data-mini='true' data-transition='slide'>zeigen</a>" + 
 						"</td>" +
@@ -306,18 +314,15 @@ function schedule() {
 					"</tr>");
 		
 		$("#lecturePopupContent").html(lectureDetails);
+		$("#lecturePopup").page(); //JQM-Styling erzwingen
 		
 		if(lecture.comment === "")
 			$("#commentDeleteButton").addClass("ui-disabled");
 		
-		// .button() / .textinput() erzwingen JQM-Styling
-		$("#commentInput").textinput(); 
-		
 		$("#goToBuildingButton")
-			.button()
 			.unbind("tap")
 			.bind("tap", function(){
-				map.showBuilding2(lecture.building);
+				map.showBuilding(lecture.building);
 			});
 		
 		$("#commentInput")
@@ -330,7 +335,6 @@ function schedule() {
 			});
 		
 		$("#commentSubmitButton")
-			.button()
 			.unbind("tap")
 			.bind("tap", function(){
 				setComment(lecture, $("#commentInput").val());
@@ -338,7 +342,6 @@ function schedule() {
 			});
 		
 		$("#commentDeleteButton")
-			.button()
 			.unbind("tap")
 			.bind("tap", function(){
 				deleteComment(lecture);
@@ -462,12 +465,10 @@ function schedule() {
 			date = dateHelper.getDateSlashString(lecture.start);
 		}
 				
-		var commentObject = new Object();
-		commentObject.id = id;
-		commentObject.date = date;
-		commentObject.comment = comment;
-		
-		var commentJSON = JSON.stringify(commentObject);
+		var commentJSON = new Object();
+		commentJSON.id = id;
+		commentJSON.date = date;
+		commentJSON.comment = comment;
 		
 		$.ajax({
 			async: false,
@@ -521,11 +522,9 @@ function schedule() {
 			date = dateHelper.getDateSlashString(lecture.start);
 		}
 		
-		var deleteCommentObject = new Object();
-		deleteCommentObject.id = id;
-		deleteCommentObject.date = date;
-		
-		var deleteCommentJSON = JSON.stringify(deleteCommentObject);
+		var deleteCommentJSON = new Object();
+		deleteCommentJSON.id = id;
+		deleteCommentJSON.date = date;
 		
 		$.ajax({
 			async: false,
