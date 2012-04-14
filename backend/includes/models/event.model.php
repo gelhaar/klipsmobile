@@ -3,172 +3,124 @@
 class Event{
 	
 	/*
-		The find static method selects events
+		The find method selects events
 		from the database and returns them as
 		an array of Event objects.
-	*/
-	
-	// Overhead: type und allDay!
-	// Gebäudename f. Roman
-		
-	// WHERE id IN (kursnrs des users)
-	
-	public static function find($command, $date = NULL)
+	*/	
+	public static function find($command, $jsondata = NULL)
 	{	
 		global $db;
-		$user = "jschopha"; 	//testuser
+		$user = $_SESSION['username'];
 		
 		switch($command)
 		{			
-			case 'getSemesterzeiten':
-				$dt = date("Ymd", time());
-				$st = $db->prepare(
-					"SELECT startVorl, endVorl
-					 FROM	semesterzeiten
-					 WHERE $dt BETWEEN `start` AND `ende`"
-				);
-				$st->execute();
+			case 'get':
 								
-				return array("semesterzeiten" => $st->fetchAll());
-				break;
-			
-			case 'getAllPeriodic':
-				$st = $db->prepare(	
+				//fetching all the users lectures  
+				$st = $db->query(	
 					"SELECT veranstaltung.*,
 							gebaeude.name AS gebäudename
 					 FROM 	veranstaltung JOIN
-							gebaeude
-					 ON		veranstaltung.gebäudeId = gebaeude.nr
-					 WHERE `frequenz` LIKE 'woche'"
+							gebaeude JOIN
+							userBelegung
+					 ON		veranstaltung.gebäudeId = gebaeude.nr AND
+							veranstaltung.nr = userBelegung.veranstNr
+					 WHERE  `username` LIKE '$user'"
 				);
-				$st->execute();
-				return array("selectedVer"	=>	$st->fetchAll());
-				break;
+				$rawLectures = $st->fetchAll();
 				
-			case 'getPeriodicByDate':
-				$givenWeekday = dateToWeekday(convertDate($date));
-				$selectedEvents = array();
-				foreach($db->query("SELECT veranstaltung.*, gebaeude.name AS gebäudename FROM veranstaltung JOIN gebaeude ON veranstaltung.gebäudeId = gebaeude.nr WHERE `frequenz` LIKE 'woche'") as $event)
-				{
-					$eventWeekday = dateToWeekday($event['startdatum']);
-					if ($eventWeekday == $givenWeekday)
-						$selectedEvents[] = $event;
-				}				
-				return array("selectedVer" => $selectedEvents);
-				break;
-				
-				//SELECT * FROM veranstaltung WHERE `frequenz` LIKE 'woche' AND gebäudename FROM gebäude WHERE `gebäude.id` LIKE `veranstaltung.id`
-				//SELECT veranstaltungen.*
-				
-			case 'getUniqueByDate':
-				list($date1, $date2) = explode("-", $date);
-				$date1 = convertDate($date1);
-				$date2 = convertDate($date2);
-				
-				$st = $db->query(
-					"SELECT veranstaltung.*,
-							gebaeude.name AS gebäudename
-					 FROM 	veranstaltung JOIN
-							gebaeude
-					 ON		veranstaltung.gebäudeId = gebaeude.nr
-					 WHERE `frequenz` LIKE 'unique' AND
-					 	   `startdatum` BETWEEN $date1 AND $date2"
-				);
-				$selVer = $st->fetchAll();
-				
+				//fetching all the users comments
 				$st = $db->query(
 					"SELECT * 
 					 FROM 	zusatz
-					 WHERE 	`user` = '$user' AND
-					 	   	`datum` BETWEEN $date1 AND $date2"
+					 WHERE 	`user` = '$user'"
 				);
-				$selZus = $st->fetchAll();
+				$comments = $st->fetchAll();
 				
 				return array(
-					"selectedVer"	=>	$selVer,
-					"selectedZus"	=>  $selZus
+					"rawLectures" 	=> $rawLectures,
+					"comments"		=> $comments
 				);
 				break;
-				
-				case 'md5test':
-					echo md5($date);
-					exit;
-								
+																				
 			default:
 				throw new Exception("Unsupported property!");
 				break;
 		}		
 	}
 	
-	public static function format($events)
+	/*
+		The format method converts the raw Lectures
+		to the specified output format name conventions
+		and returns them as a structured array.
+	*/	
+	public static function format($rawLectureData)
 	{	
-		extract($events);
-		$formattedVer = array();
-		$formattedZus = array();
-		
-		if(!empty($semesterzeiten))
+		extract($rawLectureData);
+		$singleLectures = array();
+		$recurringLectures = array();
+				
+		if(!empty($rawLectures))
 		{
-			$semesterzeiten = $semesterzeiten[0];
-			return array(
-				"startSemester" => convertToISO($semesterzeiten['startVorl'], "000000"),
-				"endSemester" => convertToISO($semesterzeiten['endVorl'], "000000")
-			);
-		}
-		
-		if(!empty($selectedVer)) 
-		foreach($selectedVer as $event)
-		{
-			if($event['frequenz'] == "woche")
-			{				
-				$formattedVer[] = array(
-					"type" => "veranstaltung",		 //overhead
-					"title" => $event['name'],
-					"id" => $event['nr'],
-					"category" => $event['kategorie'],
-					"weekday" => dateToWeekday($event['startdatum']),
-					"startTime" => $event['startzeit'],
-					"endTime" => $event['endzeit'],
-					"tutorId" => $event['dozentId'],
-					"buildingId" => $event['gebäudeId'],
-					"building" => $event['gebäudename'],
-					"room" => $event['raumNr'],
-					"allDay" => "false"
-				);
+			foreach($rawLectures as $lecture)
+				if($lecture['frequenz'] == "woche")
+				{
+					//linking matching comments
+					$linkedComments = array();
+					foreach($comments as $comment)
+						if($comment['veranstaltungsID'] == $lecture['nr'])
+						{
+							$linkedComments[] = array(
+								"date"	=>	convertDateToYYYYMMDD($comment['datum']),
+								"text"	=>	$comment['titel']
+							);
+						}
+				
+					//converting to output format
+					$recurringLectures[] = array(
+						"title" => $lecture['name'],
+						"id" => $lecture['nr'],
+						"type" => $lecture['kategorie'],
+						"weekday" => dateToWeekday($lecture['startdatum']),
+						"startTime" => convertTime($lecture['startzeit']),
+						"endTime" => convertTime($lecture['endzeit']),
+						//"tutorId" => $lecture['dozentId'],
+						"buildingId" => $lecture['gebäudeId'],
+						//"building" => $lecture['gebäudename'],
+						"room" => $lecture['raumNr'],
+						"comments" => $linkedComments
+					);
+				}
+			
+				else if($lecture['frequenz'] == "unique")
+				{
+					//linking matching comment (max 1, SingleLecture)
+					$linkedComment = "";
+					foreach($comments as $comment)
+						if($comment['veranstaltungsID'] == $lecture['nr'] && $comment['datum'] == $lecture['startdatum'])
+							$linkedComment = $comment['titel'];
+				
+					//converting to output format
+					$singleLectures[] = array(
+						"title" => $lecture['name'],
+						"id" => $lecture['nr'],
+						"type" => $lecture['kategorie'],
+						"startTime" => convertTime($lecture['startzeit']),
+						"endTime" => convertTime($lecture['endzeit']),
+						"date" => convertDateToYYYYMMDD($lecture['startdatum']),
+						//"tutorId" => $lecture['dozentId'],
+						"buildingId" => $lecture['gebäudeId'],
+						//"building" => $lecture['gebäudename'],
+						"room" => $lecture['raumNr'],
+						"comment" => $linkedComment
+					);			
+				}
 			}
-			else if($event['frequenz'] == "unique")
-			{
-				$formattedVer[] = array(
-					"type" => "veranstaltung",			//overhead!
-					"title" => $event['name'],
-					"id" => $event['nr'],
-					"category" => $event['kategorie'],
-					"startTime" => convertToISO($event['startdatum'], $event['startzeit']),
-					"endTime" => convertToISO($event['startdatum'], $event['endzeit']),
-					"tutorId" => $event['dozentId'],
-					"buildingId" => $event['gebäudeId'],
-					"building" => $event['gebäudename'], 
-					"room" => $event['raumNr'],
-					"allDay" => "false"
-				);
-			}
-		}
 		
-		if(!empty($selectedZus)) 
-		foreach($selectedZus as $zusatz)
-		{
-			$formattedZus[] = array(
-				"type" => "kommentar",				 //overhead!
-				"id" => $zusatz['veranstaltungsID'],
-				"date" => convertToISO($zusatz['datum'], "000000"),
-				"title" => $zusatz['titel'],
-				"allDay" => "false"
-			);
-		}
-		
-		$res = array();
-		if(!empty($formattedVer)) $res['veranstaltungen'] = $formattedVer;
-		if(!empty($formattedZus)) $res['kommentare'] = $formattedZus;
-		return $res;
+		return array(
+			"recurringLectures" => $recurringLectures,
+			"singleLectures" => $singleLectures
+		);
 	}
 }
 

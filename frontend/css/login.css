@@ -1,0 +1,13 @@
+#about {
+	text-align: center;
+	font-weight: normal;
+	margin-bottom: 0.8em;
+}
+
+.ui-footer .ui-title {
+	margin-bottom: 0;
+}
+
+input {
+	background-color: #ffffff !important;
+}

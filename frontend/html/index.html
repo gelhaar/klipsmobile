@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" /> 
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>KLIPSmobile</title>
+		
+		<script src="js/lib/jquery-1.7.2.min.js"></script>
+		
+<!-- 		<script src="../js/lib/jquery-ui-1.8.17.custom.min.js"></script> -->
+<!-- 		<link rel="stylesheet" href="../css/jquery-ui-1.8.17.custom.css" /> -->
+		
+		<script type="text/javascript" src="js/lib/jquery.ui.map.full.min.js"></script>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		
+		<script type="text/javascript" src="js/lib/fullcalendar.min.js"></script>
+		<link rel="stylesheet" href="css/fullcalendar.css" />
+		
+		<script type="text/javascript" src="js/dateHelper.js"></script>
+		<script type="text/javascript" src="js/session.js"></script>
+		<script type="text/javascript" src="js/modules/start.js"></script>
+		<script type="text/javascript" src="js/modules/map.js"></script>
+		<script type="text/javascript" src="js/modules/mensa.js"></script>
+		<script type="text/javascript" src="js/modules/schedule.js"></script>
+		<script type="text/javascript" src="js/modules/dates.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		
+		<link rel="stylesheet" href="css/KLIPSmobile-theme.min.css" />
+		<link rel="stylesheet" href="css/main.css" />
+		
+		<link rel="stylesheet" href="css/jquery.mobile.structure-1.1.0-rc.2.min.css" />
+		<script src="js/lib/jquery.mobile-1.1.0-rc.2.min.js"></script>
+<!-- 		<link rel="stylesheet" href="../css/jquery.mobile-1.1.0-rc.2.min.css" /> -->
+		
+<!-- 		<script type="text/javascript" src="../js/lib/jquery.easing.1.3.js"></script> -->
+<!-- 		<script type="text/javascript" src="../js/lib/jquery.mobile.scrollview.js"></script> -->
+<!-- 		<link rel="stylesheet" href="../js/lib/jquery.mobile.scrollview.css" /> -->
+<!-- 		<script type="text/javascript" src="../js/lib/scrollview.js"></script> -->
+	</head>
+	<body> 
+	
+		<div data-role="page" id="start">
+		
+			<div data-role="header" class="header" data-position="fixed">
+				<h1>Aktuelles</h1>
+			</div>
+		
+			<div data-role="content" class="content">
+				<div id="upcomingEvents" ></div>
+			</div>
+			
+			<div data-role="footer" data-id="mainFooter" class="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#start" class="ui-btn-active ui-state-persist">Aktuelles</a></li>
+						<li><a href="#schedule" data-transition="slide">Stundenplan</a></li>
+						<li><a href="#mensa" data-transition="slide">Mensa</a></li>
+						<li><a href="#map" data-transition="slide">Karte</a></li>
+						<li><a href="#dates" data-transition="slide">Termine</a></li>
+					</ul>
+				</div>
+				<div class="logoutBar">
+					<span class="userInfo">
+						Eingeloggt als <span class="userName"></span>
+					</span>
+					<a href="../backend/auth/logout.php" data-role="button" class="logoutButton" data-mini="true" rel="external">Logout</a>
+				</div>
+			</div>
+			
+		</div>
+		
+		<div data-role="page" id="schedule">
+		
+			<div data-role="header" class="header" data-position="fixed">
+				<div data-role="controlgroup" data-type="horizontal" id="dayNavigation" class="ui-btn-right">
+					<a href="#" data-role="button" data-icon="arrow-l" data-iconpos="notext" id="previousDayButton"></a>
+					<a href="#" data-role="button" data-icon="arrow-r" data-iconpos="notext" id="nextDayButton" ></a>
+				</div>
+				<h1>Stundenplan</h1>
+				<a href="#" data-role="button" data-inline="true" data-icon="grid" data-iconpos="notext" id="weekViewButton"> </a>
+			</div>
+		
+			<div data-role="content" class="content ui-scrollview-clip">	
+				<div id="calendarContainer"></div>
+			</div>
+			
+			<div data-role="footer" data-id="mainFooter" class="footer" data-position="fixed" >
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#start" data-transition="slide" data-direction="reverse">Aktuelles</a></li>
+						<li><a href="#schedule" class="ui-btn-active ui-state-persist">Stundenplan</a></li>
+						<li><a href="#mensa" data-transition="slide">Mensa</a></li>
+						<li><a href="#map" data-transition="slide">Karte</a></li>
+						<li><a href="#dates" data-transition="slide">Termine</a></li>
+					</ul>
+				</div>
+				<div class="logoutBar">
+					<span class="userInfo">
+						Eingeloggt als <span class="userName"></span>
+					</span>
+					<a href="../backend/auth/logout.php" data-role="button" class="logoutButton" data-mini="true" rel="external">Logout</a>
+				</div>
+			</div>
+		
+		</div>
+		
+		<div data-role="page" id="mensa">
+		
+			<div data-role="header" class="header" data-position="fixed">
+				<h1>Mensa</h1>
+			</div>
+		
+			<div data-role="content" class="content">	
+				<div data-role="collapsible-set" id="mensaList"></div>
+			</div>
+			
+			<div data-role="footer" data-id="mainFooter" class="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#start" data-transition="slide" data-direction="reverse">Aktuelles</a></li>
+						<li><a href="#schedule" data-transition="slide" data-direction="reverse">Stundenplan</a></li>
+						<li><a href="#mensa" class="ui-btn-active ui-state-persist">Mensa</a></li>
+						<li><a href="#map" data-transition="slide">Karte</a></li>
+						<li><a href="#dates" data-transition="slide">Termine</a></li>
+					</ul>
+				</div>
+				<div class="logoutBar">
+					<span class="userInfo">
+						Eingeloggt als <span class="userName"></span>
+					</span>
+					<a href="../backend/auth/logout.php" data-role="button" class="logoutButton" data-mini="true" rel="external">Logout</a>
+				</div>
+			</div>
+		
+		</div>
+		
+		<div data-role="page" id="map">
+		
+			<div data-role="header" class="header" data-position="fixed">
+				<h1>Karte</h1>
+			</div>
+		
+			<div data-role="content" class="content ui-scrollview-clip">
+				<div  id="mapOptions">
+					<div class="ui-grid-a">
+						<div class="ui-block-a">
+						   	<select name="buildingSelect" id="buildingSelect" data-inline="true" data-native-menu="false">
+						   		<option>Gebäude wählen</option>
+						   	</select>
+						</div>
+						<div class="ui-block-b">
+							<select name="mensaSelect" id="mensaSelect" data-inline="true" data-native-menu="false">
+								<option>Mensa wählen</option>
+							</select>
+						</div>
+					</div>
+					
+					<fieldset data-role="controlgroup" data-type="horizontal">
+						<select name="travelModeSelect" id="travelModeSelect" data-native-menu="false">
+							<option value="foot">laufen</option>
+							<option value="car">fahren</option>
+						</select>
+						<a href="#" data-role="button" data-rel="popup" id="directionsButton" class="ui-disabled">Weg zeigen</a>
+					</fieldset>
+				</div>
+				<div id="mapContainer"></div>
+			</div>
+			
+			<div data-role="footer" data-id="mainFooter" class="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#start" data-transition="slide" data-direction="reverse">Aktuelles</a></li>
+						<li><a href="#schedule" data-transition="slide" data-direction="reverse">Stundenplan</a></li>
+						<li><a href="#mensa" data-transition="slide" data-direction="reverse">Mensa</a></li>
+						<li><a href="#map" class="ui-btn-active ui-state-persist">Karte</a></li>
+						<li><a href="#dates" data-transition="slide">Termine</a></li>
+					</ul>
+				</div>
+				<div class="logoutBar">
+					<span class="userInfo">
+						Eingeloggt als <span class="userName"></span>
+					</span>
+					<a href="../backend/auth/logout.php" data-role="button" class="logoutButton" data-mini="true" rel="external">Logout</a>
+				</div>
+			</div>
+		
+		</div>
+		
+		<div data-role="page" id="dates">
+		
+			<div data-role="header" class="header" data-position="fixed">
+				<h1>Termine</h1>
+			</div>
+		
+			<div data-role="content" class="content">	
+				<div id="termine">
+					<ul data-role="listview" data-inset="true"></ul>
+				</div>
+			</div>
+			
+			<div data-role="footer" data-id="mainFooter" class="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#start" data-transition="slide" data-direction="reverse">Aktuelles</a></li>
+						<li><a href="#schedule" data-transition="slide" data-direction="reverse">Stundenplan</a></li>
+						<li><a href="#mensa" data-transition="slide" data-direction="reverse">Mensa</a></li>
+						<li><a href="#map" data-transition="slide" data-direction="reverse">Karte</a></li>
+						<li><a href="#dates" class="ui-btn-active ui-state-persist" >Termine</a></li>
+					</ul>
+				</div>
+				<div class="logoutBar">
+					<span class="userInfo">
+						Eingeloggt als <span class="userName"></span>
+					</span>
+					<a href="../backend/auth/logout.php" data-role="button" class="logoutButton" data-mini="true" rel="external">Logout</a>
+				</div>
+			</div>
+		
+		</div>
+		
+		<div data-role="dialog" id="lecturePopup">
+		
+			<div data-role="header" id="lecturePopupHeader">
+				<h1></h1>
+			</div>
+		
+			<div data-role="content" id="lecturePopupContent"></div>
+			
+			<div data-role="footer" id="lecturePopupFooter">
+				<a data-rel="back" data-role="button" data-inline="true" data-icon="back" id="lecturePopupBackButton">zur&uuml;ck</a>
+			</div>
+			
+		</div>
+	
+	</body>
+</html>
