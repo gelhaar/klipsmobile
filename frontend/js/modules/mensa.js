@@ -58,7 +58,7 @@ function mensa() {
 					$(menuListItem).append(
 								"<div class='meal'>" +
 									"<div>"+meal.name+"</div>" + 
-									"<div class='price'>Preis: "+meal.price+" €</div>" +
+									"<div class='price'>Preis: "+meal.price+" </div>" +
 								"<div>" 
 								);
 				}
@@ -78,7 +78,7 @@ function mensa() {
 	
 	function getMensa(id) {
 		for(var int = 0; int < mensen.length; int++) {
-			if(id === mensen[int].id) {
+			if(id == mensen[int].id) {
 				return mensen[int];
 			}
 		}

@@ -16,11 +16,11 @@ require_once "includes/main.php";
 
 try {
 	if(!isLoggedIn()) throw new Exception('Not logged in!');
-	
+	$jsonString = str_replace("\\","",$_POST['json']);
 	$jsondata = array();
 	if($_POST['json']) 
-		$jsondata = json_decode($_POST['json'], true);
-	
+		$jsondata = json_decode($jsonString, true);
+		
 	if($_POST['type'] && $_POST['request']) 
 	{	
 		switch ($_POST['request'])
