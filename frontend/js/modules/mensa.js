@@ -15,33 +15,32 @@ function mensa() {
 	}
 	
 	function initMensen() {
-		// $.ajax({
-// 			async: false,
-// 			type: "POST",
-// 			url: "/KLIPS-Test/KLIPSServlet",
-// 			data: "command=getMensen",
-// 			dataType: "json",
-// 			success: function(data) {
-// 				mensen = data.mensen;
-// 			}
-// 		});
+		$.ajax({
+			async: false,
+			type: "POST",
+			url: "../backend/ajax.php",
+			data: "request=Mensen&type=get",
+			dataType: "json",
+			success: function(data) {
+				mensen = data.mensen;
+			}
+		});
 	}
 	
 	function initMenus() {
-		// $.ajax({
-// 			async: false,
-// 			type: "POST",
-// 			url: "/KLIPS-Test/KLIPSServlet",
-// 			data: "command=getMenus",
-// 			dataType: "json",
-// 			success: function(data) {
-// 				menus = data.menus;
-// 			}
-// 		});
+		$.ajax({
+			async: false,
+			type: "POST",
+			url: "../backend/ajax.php",
+			data: "request=Menus&type=get",
+			dataType: "json",
+			success: function(data) {
+				menus = data;
+			}
+		});
 	}
 	
 	function initMensaView() {
-		
 		for(var int = 0; int < menus.length; int++) {
 			var mensaMenus = menus[int];
 			

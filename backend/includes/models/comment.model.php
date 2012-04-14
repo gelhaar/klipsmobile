@@ -10,7 +10,7 @@ class Comment{
 	public static function setComment($inputcomment)
 	{	
 		global $db;
-		$user = 'jschopha';			//testuser
+		$user = $_SESSION['username'];
 		
 		try {
 			extract($inputcomment);

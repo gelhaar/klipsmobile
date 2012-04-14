@@ -12,7 +12,7 @@ function session() {
 		$.ajax({		async: false,
 		type: "POST",
 		url: "../backend/ajax.php",
-		data: "request=User&command=getName",
+		data: "request=User&type=getName",
 		dataType: "json",
 		success: function(data) {
 			$(".userName").html(data.username);

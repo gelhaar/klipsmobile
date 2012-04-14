@@ -10,7 +10,7 @@ class Event{
 	public static function find($command, $jsondata = NULL)
 	{	
 		global $db;
-		$user = "jschopha"; 	//testuser, durch Sessionvariable ersetzen
+		$user = $_SESSION['username'];
 		
 		switch($command)
 		{			
@@ -85,8 +85,8 @@ class Event{
 						"startTime" => convertTime($lecture['startzeit']),
 						"endTime" => convertTime($lecture['endzeit']),
 						//"tutorId" => $lecture['dozentId'],
-						//"buildingId" => $lecture['gebäudeId'],
-						"building" => $lecture['gebäudename'],
+						"buildingId" => $lecture['gebäudeId'],
+						//"building" => $lecture['gebäudename'],
 						"room" => $lecture['raumNr'],
 						"comments" => $linkedComments
 					);
@@ -109,8 +109,8 @@ class Event{
 						"endTime" => convertTime($lecture['endzeit']),
 						"date" => convertDateToYYYYMMDD($lecture['startdatum']),
 						//"tutorId" => $lecture['dozentId'],
-						//"buildingId" => $lecture['gebäudeId'],
-						"building" => $lecture['gebäudename'],
+						"buildingId" => $lecture['gebäudeId'],
+						//"building" => $lecture['gebäudename'],
 						"room" => $lecture['raumNr'],
 						"comment" => $linkedComment
 					);			

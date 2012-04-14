@@ -25,6 +25,14 @@ class User{
 		return $status;
 	}
 	
+	public static function formatResponse($bool)
+	{	
+		if($bool) $status = "OK";
+		else $status = "ERROR";
+		return array(
+			"status"	=> $status
+			);
+	}
 }
 
 ?>

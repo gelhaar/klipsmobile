@@ -24,6 +24,10 @@ require_once "includes/models/building.model.php";
 require_once "includes/controllers/building.controller.php";
 require_once "includes/models/comment.model.php";
 require_once "includes/controllers/comment.controller.php";
+require_once "includes/models/mensa.model.php";
+require_once "includes/controllers/mensa.controller.php";
+require_once "includes/models/menus.model.php";
+require_once "includes/controllers/menus.controller.php";
 
 
 

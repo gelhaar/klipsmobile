@@ -8,7 +8,7 @@ class Building{
 	public static function getAll()
 	{	
 		global $db;
-		$user = "jschopha"; 	//testuser!!
+		$user = $_SESSION['username'];
 										
 		$st = $db->query(
 			"SELECT DISTINCT gebaeude.*
@@ -31,7 +31,8 @@ class Building{
 			$fBuildings[] = array(
 				"name"		=> $b["name"],
 				"longitude"	=> $b["longitude"],
-				"latitude"	=> $b["latitude"]
+				"latitude"	=> $b["latitude"],
+				"id"		=> $b["nr"]
 				);
 		}
 		

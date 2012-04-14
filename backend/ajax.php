@@ -15,6 +15,7 @@ session_start();
 require_once "includes/main.php";
 
 try {
+	if(!isLoggedIn()) throw new Exception('Not logged in!');
 	
 	$jsondata = array();
 	if($_POST['json']) 
@@ -42,6 +43,14 @@ try {
 				
 			case "User":
 				$c = new UserController();
+				break;
+				
+			case "Mensen":
+				$c = new MensaController();
+				break;
+				
+			case "Menus":
+				$c = new MenusController();
 				break;
 				
 			default:
