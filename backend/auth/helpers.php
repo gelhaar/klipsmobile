@@ -2,7 +2,7 @@
 
 function validateUser($username)
 {
-    session_regenerate_id (); //this is a security measure
+    //session_regenerate_id (); //this is a security measure
     $_SESSION['valid'] = 1;
     $_SESSION['username'] = $username;
 }

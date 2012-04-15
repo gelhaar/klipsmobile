@@ -184,13 +184,13 @@ function map() {
 	
 	function showMensa(id) {
 		var singleMensa = mensa.getMensa(id);
-		
-		markerToShow = new Object();
-		markerToShow.type = "mensa";
-		markerToShow.id = id;
-		markerToShow.name = singleMensa.name;
-		markerToShow.latitude = singleMensa.latitude;
-		markerToShow.longitude = singleMensa.longitude;	
+        
+        markerToShow = new Object();
+        markerToShow.type = "mensa";
+        markerToShow.id = id;
+        markerToShow.name = singleMensa.name;
+        markerToShow.latitude = singleMensa.lat;
+        markerToShow.longitude = singleMensa.long;   
 	}
 	
 	function showMarker(latLng, title, window) {

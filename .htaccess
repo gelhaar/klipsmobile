@@ -1,1 +1,4 @@
 Options +Indexes
+
+php_flag session.bug_compat_42 1
+php_flag session.bug_compat_warn 0

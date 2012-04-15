@@ -1,7 +1,6 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set("display_errors",1);
+require_once "includes/error_reporting.php";
 
 /*
 	This is the index file of our simple website.
@@ -16,11 +15,17 @@ require_once "includes/main.php";
 
 try {
 	if(!isLoggedIn()) throw new Exception('Not logged in!');
-	$jsonString = str_replace("\\","",$_POST['json']);
+	
 	$jsondata = array();
-	if($_POST['json']) 
+	
+	if(isset($_POST['json'])) 
+	{	
+		//Fix für php 5.2
+		$jsonString = str_replace("\\","",$_POST['json']);
+		//json to array
 		$jsondata = json_decode($jsonString, true);
-		
+	}
+	
 	if($_POST['type'] && $_POST['request']) 
 	{	
 		switch ($_POST['request'])

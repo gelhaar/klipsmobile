@@ -9,26 +9,27 @@ function session() {
 	}
 	
 	function initUsername() {
-		$.ajax({		async: false,
-		type: "POST",
-		url: "../backend/ajax.php",
-		data: "request=User&type=getName",
-		dataType: "json",
-		success: function(data) {
-			$(".userName").html(data.username);
-		}
-	});
+		$.ajax({		
+			async: false,
+			type: "POST",
+			url: "../backend/ajax.php",
+			data: "request=User&type=getName",
+			dataType: "json",
+			success: function(data) {
+				$(".userName").html(data.username);
+			}
+		});
 	
 		
 	}
 
-	function ping() {
+	 function ping() {
 		$.ajax({
 			type: "POST",
 			url: "../backend/auth/ping.php",
 			data: "",
 			success: function(data) {}
 		});
-	}
+ 	}
 	
 }
