@@ -19,7 +19,7 @@ $st->execute(array('username'=>$username));
 
 if($st->rowCount() < 1) //no such user exists
 {
-    header('Location: /klipsmobile/frontend/');
+    header('Location: ../../frontend/');
     die();
 }
 $userData = $st->fetchAll();
@@ -27,7 +27,7 @@ $userData = $userData[0];
 $hash = hash('sha256', $userData['salt'] . hash('sha256', $password) );
 if($hash != $userData['password']) //incorrect password
 {
-    header('Location: /klipsmobile/frontend/');
+    header('Location: ../../frontend/');
     die();
 }
 else
@@ -36,7 +36,7 @@ else
 }
 //redirect to another page or display "login success" message
 
-header('Location: /klipsmobile/frontend/');
+header('Location: ../../frontend/');
 
 
 ?>

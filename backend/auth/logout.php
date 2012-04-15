@@ -7,6 +7,6 @@ session_start();
 $_SESSION = array(); //destroy all of the session variables
 session_destroy();
 
-header('Location: /klipsmobile/frontend/');
+header('Location: ../../frontend/');
 //exit;
 ?>

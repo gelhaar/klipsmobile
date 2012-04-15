@@ -1,25 +1,11 @@
-function login() {
+$("#loginPage").live("pageshow", function() {
 
-	if (typeof(_login_prototype_called) == "undefined")
-	{
-		_login_prototype_called = true;
-		login.prototype.initLogoutBar = initLogoutBar;
-	}
+	setContentHeight();
 	
-	initLogoutBar();
-	
-	function initLogoutBar() {
-		$.ajax({
-		async: false,
-		type: "POST",
-		url: "../backend/ajax.php",
-		data: "request=User&type=getName",
-		dataType: "json",
-		success: function(data) {
-			$(".userName").html(data.username);
-		}
-	});
-		
-	}
+	function setContentHeight() {
+		var contentHeight =  $(window).height() - $(".header:visible").outerHeight() - $(".footer:visible").outerHeight();
+		contentHeight -= ($(".content:visible").outerHeight() - $(".content:visible").height());
+		$(".content").height(contentHeight);
+	} 
 
-}
+});

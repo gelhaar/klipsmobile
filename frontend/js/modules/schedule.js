@@ -13,14 +13,14 @@ function schedule() {
 		schedule.prototype.initScheduleView = initScheduleView;
 		schedule.prototype.getNextLectures = getNextLectures;
 		schedule.prototype.render = render;
-		schedule.prototype.reset = reset;
+//		schedule.prototype.reset = reset;
 		schedule.prototype.showLecture = showLecture;
 		
-		initEvents();
+		initLectures();
 		initHolidays();
 	}
 
-	function initEvents() {
+	function initLectures() {
 		$.ajax({
 			async: false,
 			type: "POST",
@@ -269,7 +269,7 @@ function schedule() {
 	
 	function showLecture(lecture) {
 		$("#lecturePopupHeader > h1").html(lecture.title);
-		
+				
 		var lectureDetails = $("<table id='lectureDetails'></table>")
 			.append("<tr>" +
 						"<td class='lectureDetailsCaption'>Zeit:</td>" +
@@ -283,9 +283,9 @@ function schedule() {
 					"</tr>")
 			.append("<tr>" +
 						"<td class='lectureDetailsCaption'>Gebäude:</td>" +
-						"<td>"+map.getBuilding(lecture.building).name+"</td>" +
+						"<td>"+map.getBuilding(lecture.buildingId).name+"</td>" +
 						"<td>" +
-							"<a href='#map' id='goToBuildingButton' data-role='button' data-mini='true' data-transition='slide'>zeigen</a>" + 
+							"<a href='#map' id='goToBuildingButton' data-role='button' data-mini='true' data-transition='slide'>Karte</a>" + 
 						"</td>" +
 					"</tr>")
 			.append("<tr>" +
@@ -314,18 +314,20 @@ function schedule() {
 					"</tr>");
 		
 		$("#lecturePopupContent").html(lectureDetails);
-		$("#lecturePopup").page(); //JQM-Styling erzwingen
 		
+		//button(), textinput() und page() erzwingen JQM-Styling 
 		if(lecture.comment === "")
 			$("#commentDeleteButton").addClass("ui-disabled");
 		
 		$("#goToBuildingButton")
+			.button()
 			.unbind("tap")
 			.bind("tap", function(){
-				map.showBuilding(lecture.building);
+				map.showBuilding(lecture.buildingId);
 			});
 		
 		$("#commentInput")
+			.textinput()
 			.unbind("keyup")
 			.bind("keyup", function() {
 				if($("#commentInput").val() !== "" && $("#commentInput").val() !== lecture.comment)
@@ -335,6 +337,7 @@ function schedule() {
 			});
 		
 		$("#commentSubmitButton")
+			.button()
 			.unbind("tap")
 			.bind("tap", function(){
 				setComment(lecture, $("#commentInput").val());
@@ -342,6 +345,7 @@ function schedule() {
 			});
 		
 		$("#commentDeleteButton")
+			.button()
 			.unbind("tap")
 			.bind("tap", function(){
 				deleteComment(lecture);
@@ -349,6 +353,8 @@ function schedule() {
 			});
 		
 		$.mobile.changePage("#lecturePopup");
+		
+		$("#lecturePopup").page(); 
 	}
 
 	
@@ -443,12 +449,12 @@ function schedule() {
 		calendar.fullCalendar("render");
 		$(".lectureEvent").width($(".fc-day-content").width());
 	};
-	
-	function reset() {
-		//if the lecture-popup is visible, the user navigated there from the calendar and will navigate back -> no reset
-		if(!$("#lecturePopup").is(":visible"))
-			calendar.fullCalendar("today");
-	}
+//	 TODO
+//	function reset() {
+//		//if the lecture-popup is visible, the user navigated there from the calendar and will navigate back -> no reset
+//		if(!$("#lecturePopup").is(":visible"))
+//			calendar.fullCalendar("today");
+//	}
 
 	function setComment(lecture, comment) {
 		
@@ -465,15 +471,17 @@ function schedule() {
 			date = dateHelper.getDateSlashString(lecture.start);
 		}
 				
-		var commentJSON = new Object();
-		commentJSON.id = id;
-		commentJSON.date = date;
-		commentJSON.comment = comment;
+		var commentObject = new Object();
+		commentObject.id = id;
+		commentObject.date = date;
+		commentObject.comment = comment;
+		
+		var commentJSON = JSON.stringify(commentObject);
 		
 		$.ajax({
 			async: false,
 			type: "POST",
-			url: "../../backend/ajax.php",
+			url: "../backend/ajax.php",
 			data: "request=Comment&type=set&json="+commentJSON,
 			dataType: "json",
 			success: function(data) {
@@ -486,6 +494,13 @@ function schedule() {
 						var commentObject = new Object();
 						commentObject.text = comment;
 						commentObject.date = date;
+						
+						for (var int = 0; int < lecture.comments.length; int++) {
+							if(date === lecture.comments[int].date) {
+								lecture.comments.pop(int);
+								break;	
+							}
+						}
 						
 						lecture.comments.push(commentObject);
 					}
@@ -522,14 +537,16 @@ function schedule() {
 			date = dateHelper.getDateSlashString(lecture.start);
 		}
 		
-		var deleteCommentJSON = new Object();
-		deleteCommentJSON.id = id;
-		deleteCommentJSON.date = date;
+		var deleteCommentObject = new Object();
+		deleteCommentObject.id = id;
+		deleteCommentObject.date = date;
+		
+		var deleteCommentJSON = JSON.stringify(deleteCommentObject);
 		
 		$.ajax({
 			async: false,
 			type: "POST",
-			url: "../../backend/ajax.php",
+			url: "../backend/ajax.php",
 			data: "request=Comment&type=delete&json="+deleteCommentJSON,
 			dataType: "json",
 			success: function(data) {

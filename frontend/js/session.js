@@ -4,22 +4,19 @@ function session() {
 		_session_prototype_called = true;
 		session.prototype.initUsername = initUsername;
 		session.prototype.ping = ping;
-		
-		initUsername();
 	}
 	
 	function initUsername() {
-		$.ajax({		async: false,
-		type: "POST",
-		url: "../backend/ajax.php",
-		data: "request=User&type=getName",
-		dataType: "json",
-		success: function(data) {
-			$(".userName").html(data.username);
-		}
-	});
-	
-		
+		$.ajax({		
+			async: true,
+			type: "POST",
+			url: "../backend/ajax.php",
+			data: "request=User&type=getName",
+			dataType: "json",
+			success: function(data) {
+				$(".userName").html(data.username);
+			}
+		});
 	}
 
 	function ping() {

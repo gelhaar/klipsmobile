@@ -1,6 +1,8 @@
 /**
  * Hilfsklasse für Umwandlung von Date-Objekten in Strings.
+ * @author Roman Quiring
  */
+
 function dateHelper() {
 	
 	//Konstruktor
@@ -14,7 +16,7 @@ function dateHelper() {
 	
 	/**
 	 * Konvertiert ein date in einen String der Form DD.MM.YYYY.
-	 * @param date ein date-Objekt
+	 * @param date ein date-Objekt.
 	 * @returns {String}
 	 */
 	function getDateString(date) {
@@ -34,7 +36,7 @@ function dateHelper() {
 
 	/**
 	 * Konvertiert ein date in einen String der Form HH.MM
-	 * @param date ein date-Objekt
+	 * @param date ein date-Objekt.
 	 * @returns {String}
 	 */
 	function getTimeString(date) {
@@ -50,7 +52,7 @@ function dateHelper() {
 	
 	/**
 	 * Gibt den Wochentag eines dates als String zurück.
-	 * @param date ein date-Objekt
+	 * @param date ein date-Objekt.
 	 * @returns {String}
 	 */
 	function getWeekDayString(date) {
@@ -60,7 +62,7 @@ function dateHelper() {
 	
 	/**
 	 * Konvertiert ein date in einen String der Form YYYY/MM/DD.
-	 * @param date ein date-Objekt
+	 * @param date ein date-Objekt.
 	 * @returns {String}
 	 */
 	function getDateSlashString(date) {

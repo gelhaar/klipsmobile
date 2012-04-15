@@ -1,7 +1,8 @@
-
 /**
  * Termine-Modul.
+ * @author Roman Quiring
  */
+
 function dates() {
 	
 	 //enthält ein Array mit date-Objekten der Semester- und Vorlesungszeiten sowie die Vorlesungszeiten als Attribute
@@ -21,6 +22,9 @@ function dates() {
 		initDates();
 	}
 	
+	/**
+	 * Führt einen AJAX-Request aus und befüllt die Termine-Arrays.
+	 */
 	function initDates() {
 		$.ajax({
 			async: false,
@@ -35,7 +39,7 @@ function dates() {
 					date.date = new Date(data.period[int].date);
 					date.name = data.period[int].name;
 					
-					//wichtig für stundenplan
+					//wichtig für den Stundenplan
 					if(date.name === "Vorlesungsbeginn")
 						period.lectureStart = date.date;
 					else if(date.name === "Vorlesungsende")
@@ -57,6 +61,9 @@ function dates() {
 		});
 	}
 	
+	/**
+	 * Füllt den "Termine"-Tab mit einer Liste aller Termine.
+	 */
 	function initDateView() {
 		$("#termine > ul").append("<li data-role='list-divider'>Semesterzeiten:</li>");
 			
@@ -76,6 +83,13 @@ function dates() {
 		}
 	};
 	
+	/**
+	 * Gibt die kommenden Termine zurück. 
+	 * Anzahl der zu überprüfenden Tage und maximale Anzahl der Termine sind optionale Parameter.
+	 * @param numDays Anzahl der zu überprüfenden Tage. Default: 3.
+	 * @param numDates maximale Anzahl der Termine. Default: 3.
+	 * @returns {Array}
+	 */
 	function getNextDates(numDays, numDates) {
 		
 		var days = (numDays === undefined || numDays === null) ? 3 : numDays;
