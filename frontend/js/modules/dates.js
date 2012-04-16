@@ -5,10 +5,10 @@
 
 function dates() {
 	
-	 //enthält ein Array mit date-Objekten der Semester- und Vorlesungszeiten sowie die Vorlesungszeiten als Attribute
+	 //date-Objekte der Semester- und Vorlesungszeiten
 	var period = new Array();
 	
-	//enthält ein Array mit date-Objekten der Feiertage
+	//date-Objekte der Feiertage
 	var holidays = new Array();
 	
 	//Konstruktor

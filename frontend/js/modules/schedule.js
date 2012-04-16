@@ -1,3 +1,8 @@
+/**
+ * Stundenplan-Modul.
+ * @author Roman Quiring
+ */
+
 function schedule() {
 	
 	var singleLectures = null;
@@ -13,13 +18,15 @@ function schedule() {
 		schedule.prototype.initScheduleView = initScheduleView;
 		schedule.prototype.getNextLectures = getNextLectures;
 		schedule.prototype.render = render;
-//		schedule.prototype.reset = reset;
 		schedule.prototype.showLecture = showLecture;
 		
 		initLectures();
 		initHolidays();
 	}
 
+	/**
+	 * Führt einen AJAX-Request aus und initialisiert die Veranstaltungs-Arrays.
+	 */
 	function initLectures() {
 		$.ajax({
 			async: false,
@@ -34,6 +41,9 @@ function schedule() {
 		});
 	}
 	
+	/**
+	 * Befüllt das allHolidays-Array mit Date-Objekten der im Termin-Modul zur Verfügung stehenden Termine.
+	 */
 	function initHolidays() {
 		for (var int = 0; int < dates.holidays.length; int++) {
 			var holiday = dates.holidays[int];
@@ -50,9 +60,10 @@ function schedule() {
 		}
 	}
 	
-	
+	/**
+	 * Initialisiert den Stundenplan und seine Optionen und zeigt ihn im "Stundenplan"-Tab an.
+	 */
 	function initScheduleView() {
-
 		initSchedule();
 		
 		$("#nextDayButton").live("tap", function(){
@@ -71,6 +82,9 @@ function schedule() {
 		});
 	}
 	
+	/**
+	 * Initialisiert den Stundenplan.
+	 */
 	function initSchedule() {
 
 		calendar = $("#calendarContainer").fullCalendar({
@@ -85,23 +99,8 @@ function schedule() {
 				day: "dddd d.M."
 			},
 			timeFormat: 'H:mm',
-			
-			//TODO kann raus
-//			monthNames:["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
-//			monthNamesShort : ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
-//			buttonText: {
-//				today: "heute",
-//				month: "Monat",
-//				week: "Woche",
-//				day: "Tag"
-//			},
-//			titleFormat: {
-//				month: "MMMM yyyy",
-//				week: "d[ yyyy]{ '&#8212;'[ MMM] d MMM yyyy}", // - TODO
-//				day: "dddd, d. MMM yyyy"
-//			},
 	
-			//header
+			//Header / Kalenderinternes Interface
 			header: false,
 			
 			allDaySlot: true, 
@@ -109,17 +108,6 @@ function schedule() {
 			
 			contentHeight: 1000, //großer Wert unterdrückt Scrollbar
 
-			//TODO scrollbar-hack, benötigt?
-//			viewDisplay: function(view) {
-//				var n = view.name;
-//				var body_h = $('div.fc-view-'+n+' > div > div > div').height();
-//				$('div.fc-view-'+n+' > div > div, div.fc-view-'+n+' .fc-agenda-days').height(body_h + 20 +'px');
-//				$('div.fc-view-'+n+' .fc-agenda-days thead th').height(20);
-//				
-//				$("fc-agenda-gutter ui-widget-header fc-last").width(1).css("border-left", "none").empty();;
-//				$('.fc-agenda-gutter').width(1).css("border-left", "none").empty();
-//			},
-	
 			//Zeitleiste
 			axisFormat: "HH:mm",
 			minTime: 8,
@@ -145,7 +133,10 @@ function schedule() {
 		calendar.fullCalendar("changeView", "agendaDay"); 	
 	}
 	
-	
+	/**
+	 * Gibt ein Array zurück, das fullCalendar-kompatible Kalendereinträge aller Veranstaltungen und Feiertage enthält.
+	 * @returns {Array}
+	 */
 	function getCalendarEvents() {
 		var events = new Array();
 		
@@ -154,12 +145,12 @@ function schedule() {
 			var singleLecture = singleLectures[int];
 						
 			var lectureStartTime = singleLecture.startTime.split(".");
-			var lectureStartDate = new Date(singleLecture.lectureDate);
+			var lectureStartDate = new Date(singleLecture.date);
 			lectureStartDate.setHours(lectureStartTime[0]);
 			lectureStartDate.setMinutes(lectureStartTime[1]);
 			
 			var lectureEndTime = singleLecture.endTime.split(".");
-			var lectureEndDate = new Date(singleLecture.lectureDate);
+			var lectureEndDate = new Date(singleLecture.date);
 			lectureEndDate.setHours(lectureEndTime[0]);
 			lectureEndDate.setMinutes(lectureEndTime[1]);
 			
@@ -244,7 +235,12 @@ function schedule() {
 		return events;
 	}
 	
-
+	/**
+	 * Wird aufgerufen wenn ein Event im Stundenplan gerendert wird.
+	 * Fügt dem Element Kommentare und einen Click-Handler für die Detailansicht hinzu.
+	 * @param event das Kalender-Event.
+	 * @param element das DOM-Element des Events.
+	 */
 	function renderEvent(event, element) {
 		$(element)
 			.attr("id", event.id)
@@ -253,7 +249,7 @@ function schedule() {
 				showLecture(event);
 			});
 		
-		if(event.id === undefined)  //TODO dates haben keine id (-> alle all-day events haben im DOM die selbe id)
+		if(event.id === undefined)
 			$(element).addClass("allDayEvent");
 		else {
 			$(element).addClass("lectureEvent");
@@ -267,6 +263,10 @@ function schedule() {
 		}
 	}
 	
+	/**
+	 * Öffnet die Detailansicht einer übergebenen Veranstaltung.
+	 * @param lecture die Veranstaltung, deren Details angezeigt werden sollen.
+	 */
 	function showLecture(lecture) {
 		$("#lecturePopupHeader > h1").html(lecture.title);
 				
@@ -357,7 +357,13 @@ function schedule() {
 		$("#lecturePopup").page(); 
 	}
 
-	
+	/**
+	 * Gibt die kommenden Veranstaltungen zurück. 
+	 * Anzahl der zu überprüfenden Tage und maximale Anzahl der Termine sind optionale Parameter.
+	 * @param numDays Anzahl der zu überprüfenden Tage. Default: 3.
+	 * @param numLectures maximale Anzahl der Termine. Default: 3.
+	 * @returns {Array}
+	 */
 	function getNextLectures(numDays, numLectures) {
 		
 		var days = (numDays === undefined || numDays === null) ? 3 : numDays;
@@ -445,17 +451,19 @@ function schedule() {
 		return nextLectures;
 	}
 	
+	/**
+	 * Rendert den Kalender und streckt die Einträge auf volle Breite.
+	 */
 	function render() {
 		calendar.fullCalendar("render");
 		$(".lectureEvent").width($(".fc-day-content").width());
 	};
-//	 TODO
-//	function reset() {
-//		//if the lecture-popup is visible, the user navigated there from the calendar and will navigate back -> no reset
-//		if(!$("#lecturePopup").is(":visible"))
-//			calendar.fullCalendar("today");
-//	}
 
+	/**
+	 * Gibt einer übergebenen Veranstaltung einen übergebenen Kommentar.
+	 * @param lecture die zu kommentierende Veranstaltung.
+	 * @param comment der Kommentar.
+	 */
 	function setComment(lecture, comment) {
 		
 		var isSingleLecture = (lecture.comments === undefined);
@@ -505,14 +513,14 @@ function schedule() {
 						lecture.comments.push(commentObject);
 					}
 					
-					//update calendar (if already initialised)
+					//update calendar (if initialised)
 					if(calendar !== undefined) {
 						var originalEvent = calendar.fullCalendar("clientEvents", lecture.id);
 						originalEvent[0].comment = comment;
 						calendar.fullCalendar("updateEvent", originalEvent[0]);
 					}
 					
-					//update startpage (if already initialised)
+					//update startpage (if initialised)
 					if($("#upcomingEvents").html() !== "") {
 						start.initStartPage();
 						$("#start").trigger("create");
@@ -522,6 +530,10 @@ function schedule() {
 		});
 	}
 	
+	/**
+	 * Löscht den Kommentar einer übergebenen Veranstaltung.
+	 * @param lecture die Veranstaltung, deren Kommentar gelöscht werden soll.
+	 */
 	function deleteComment(lecture) {
 		
 		var isSingleLecture = (lecture.comments === undefined);
@@ -564,7 +576,7 @@ function schedule() {
 						}
 					}
 					
-					//update calendar (if already initialised)
+					//update calendar (if initialised)
 					if(calendar !== undefined) {
 						var originalEvent = calendar.fullCalendar("clientEvents", lecture.id);
 						
@@ -572,7 +584,7 @@ function schedule() {
 						calendar.fullCalendar("updateEvent", originalEvent[0]);
 					}
 					
-					//update startpage (if already initialised)
+					//update startpage (if initialised)
 					if($("#upcomingEvents").html() !== "") {
 						start.initStartPage();
 						$("#start").trigger("create");

@@ -24,7 +24,6 @@
 .logoutBar {
 	padding: 0.3em;
 	background-color: #EBEFF5;
-/* 	font-size: 0.8em; */
 	font-weight: normal;
 	color: #555555;
 	text-shadow: 0 1px 1px #D7D7D7;
@@ -98,11 +97,9 @@
 	padding: 0.1em 0.2em;
 	display: none;
 	text-shadow: none;
-/* 	font-size: 0.8em; */
 }
 
 .fc-event-content {
-/* 	font-size: 0.8em; */
 	color: #ffffff;
 	text-shadow: none;
 	border: 0;
@@ -113,11 +110,6 @@
 	min-height: 25px !important;
 	padding: 0 !important;
 	margin: 0 !important;
-}
-
-.fc-agenda-axis {
-/* 	font-size: 0.7em !important; */
-/* 	width: 2.5em !important; */
 }
 
 .fc-view {
@@ -165,32 +157,21 @@
 	font-size: 1em !important;
 }
 
-.mensaName a .ui-btn-inner{
-/* 	padding-right: 0.5em; */
-/* 	line-height: 1.2em; */
-
+#mensaList div h1 .ui-btn-inner {
+	padding-right: 0.5em;
 }
 
-.mensaName a .ui-btn-inner .ui-btn-text {
-/* 	margin-top: 2em; */
-/* 	line-height: 2em; */
-/* 	vertical-align: middle; */
 
-float: left;
+.mensaName {
+	float: left;
+	line-height: 2em;
 }
 
-.mensaName a .ui-btn-inner .ui-btn-corner-all {
-/* 	line-height: 2em;; */
-}
-
-/* .mensaName .ui-icon { */
-/* 	padding-right: 0 ; */
-/* 	padding-top: 0; */
-/* } */
 
 .menuName {
 	font-weight: bold;
 	font-size: 1em !important;
+	margin-top: 0.5em;
 }
 
 .meal {
@@ -204,14 +185,12 @@ float: left;
 .goToMensaButton .ui-btn-inner {
 	font-size: 1.3em !important;
 	padding: 0 0.4em 0.5em 0.4em !important;
-/* 	position: absolute; */
-/* 	right: 0; */
-/* 	top: 0; */
 }
 
 .goToMensaButton .ui-btn-text {
 	padding: 0 !important;
 }
+
 
 /* KARTE */
 
