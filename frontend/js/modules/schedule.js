@@ -145,12 +145,12 @@ function schedule() {
 			var singleLecture = singleLectures[int];
 						
 			var lectureStartTime = singleLecture.startTime.split(".");
-			var lectureStartDate = new Date(singleLecture.lectureDate);
+			var lectureStartDate = new Date(singleLecture.date);
 			lectureStartDate.setHours(lectureStartTime[0]);
 			lectureStartDate.setMinutes(lectureStartTime[1]);
 			
 			var lectureEndTime = singleLecture.endTime.split(".");
-			var lectureEndDate = new Date(singleLecture.lectureDate);
+			var lectureEndDate = new Date(singleLecture.date);
 			lectureEndDate.setHours(lectureEndTime[0]);
 			lectureEndDate.setMinutes(lectureEndTime[1]);
 			
