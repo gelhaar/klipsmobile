@@ -15,6 +15,8 @@ require_once "includes/error_reporting.php";
  *		type	= [Request-Art]
  *	Optional:	
  *		(json	= [JSON-Objekt])
+ *  
+ *	@author: Jonas Schophaus, Benjamin Gelhaar
  */
 
 //init session
