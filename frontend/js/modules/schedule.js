@@ -474,7 +474,7 @@ function schedule() {
 		var commentObject = new Object();
 		commentObject.id = id;
 		commentObject.date = date;
-		
+		commentObject.comment = comment;
 		var commentJSON = JSON.stringify(commentObject);
 		
 		$.ajax({
