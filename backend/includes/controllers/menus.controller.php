@@ -1,6 +1,11 @@
 <?php
 
-/* This controller renders the event pages */
+/**
+ * Dieser Controller rendert Antworten auf Requests
+ * nach Menus-Objekten.
+ *
+ * @author Jonas Schophaus
+ */
 
 class MenusController
 {

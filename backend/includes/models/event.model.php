@@ -1,12 +1,19 @@
 <?php
 
+/**
+ * @author Jonas Schophaus */
+
 class Event{
 	
-	/*
-		The find method selects events
-		from the database and returns them as
-		an array of Event objects.
-	*/	
+	/**
+	 *	Die find Methode selektiert alle vom
+	 *	User belegten Veranstaltungen aus der DB
+	 *	sowie dazugehörige Kommentare und liefert ein
+	 *	zweidimensionales Array zurück mit den
+	 *	benötigten Informationen zurück.
+	 *	(Das spezifizierte Output-Format für Date-Objekte
+	 *	enthält zugehörige Comments als Unterobjekte.)
+	 */	
 	public static function find($command, $jsondata = NULL)
 	{	
 		global $db;
@@ -16,7 +23,7 @@ class Event{
 		{			
 			case 'get':
 								
-				//fetching all the users lectures  
+				//fetching all the users lectures 
 				$st = $db->query(	
 					"SELECT veranstaltung.*,
 							gebaeude.name AS gebäudename
@@ -48,12 +55,13 @@ class Event{
 				break;
 		}		
 	}
-	
-	/*
-		The format method converts the raw Lectures
-		to the specified output format name conventions
-		and returns them as a structured array.
-	*/	
+		
+	/**
+	 * Erzeugt aus einem zweidimensionalen Input Array mit
+	 * Lectures und dazugehörigen Comments Lecture-Objekte
+	 * im Output-Format. Die Output-Objektstruktur unterscheidet
+	 * zwischen single und recurring Lectures.
+	 */
 	public static function format($rawLectureData)
 	{	
 		extract($rawLectureData);

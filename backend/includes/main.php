@@ -1,9 +1,9 @@
 <?php
 
-/*
-	This is the main include file.
-	It is only used in index.php and keeps it much cleaner.
-*/
+/**
+ *	Main Include File.
+ *	Nur in ajax.php benutzt, dient der Übersichtlichkeit.
+ */
 
 require_once "tools/simple_html_dom.php";
 
@@ -30,8 +30,6 @@ require_once "includes/models/menus.model.php";
 require_once "includes/controllers/menus.controller.php";
 
 
-
-// This will allow the browser to cache the pages of the store.
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: max-age=3600, public');
 header('Pragma: cache');

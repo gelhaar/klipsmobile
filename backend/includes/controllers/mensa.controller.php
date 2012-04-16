@@ -1,6 +1,11 @@
 <?php
 
-/* This controller renders the event pages */
+/**
+ * Dieser Controller rendert Antworten auf Requests
+ * nach Mensa-Objekten.
+ *
+ * @author Jonas Schophaus
+ */
 
 class MensaController
 {
@@ -23,7 +28,6 @@ class MensaController
 		}
 		
 		$formattedMensen = Mensa::format($mensen);
-		//echo json_encode($formattedBuildings);
 		render('mensa',array(
 			'mensen'	=> $formattedMensen
 		));		

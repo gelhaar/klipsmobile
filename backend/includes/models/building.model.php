@@ -1,10 +1,18 @@
 <?php
 
+/**
+ * @author Jonas Schophaus */
+
 class Building{
 	
-	/*
-	*/
-		
+	/**
+	 * Die getAll() Funktion ruft alle Datensätze
+	 * aus der gebaeude-Tabelle der Datenbank ab,
+	 * in denen Veranstaltungen stattfinden, die
+	 * vom angemeldeten Benutzer belegt werden
+	 * und liefert diese als array von Building-
+	 * Objekten zurück.
+	 */
 	public static function getAll()
 	{	
 		global $db;
@@ -22,6 +30,13 @@ class Building{
 		return $st->fetchAll();		
 	}
 	
+	
+	/**
+	 * Die format() Funktion konvertiert das
+	 * Eingabe-Array von Buildings in die für die
+	 * Schnittstelle definierte Datenstruktur und
+	 * gibt sie in einem result array zurück. 
+	 */
 	public static function format($buildings)
 	{	
 		$fBuildings = array();

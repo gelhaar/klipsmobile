@@ -1,6 +1,9 @@
 <?php
 
-/* This controller renders the event pages */
+/**
+ * 
+ * @author Benjamin Gelhaar
+ */
 
 class UserController
 {

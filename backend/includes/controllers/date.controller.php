@@ -1,6 +1,11 @@
 <?php
 
-/* This controller renders the event pages */
+/**
+ * Dieser Controller rendert Antworten auf Requests
+ * nach Date-Objekten.
+ *
+ * @author Jonas Schophaus
+ */
 
 class DateController
 {

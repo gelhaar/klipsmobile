@@ -1,38 +1,54 @@
 <?php
 
+/**	
+ *	Dieses Skript liest von der Seite des Kölner Studentenwerks die Speiseplan-
+ *	Seiten aller Kölner Mensen für die aktuelle Woche ein und parsed die Gerichte
+ *	und dazugehörige Preise heraus.
+ *	Für jeden Wochentag werden die Gerichte in einer JSON-Datenstruktur als einzelne
+ *	Datei im 'data'-Verzeichnis abgelegt.
+ *	Dieser Task soll wöchentlich (sonntäglich) ausgeführt werden, sodass dort immer 
+ *	die benötigten Daten der aktuellen Woche verfügbar sind.
+ *
+ *	@author Jonas Schophaus	
+ */
+
 require_once "simple_html_dom.php";
 require_once "../includes/config.php";
 require_once "../includes/connect.php";
 
+//init
 $mensen = array();
 $departments = array();
 $mensaId = 1;
 
+//get source html: Alle Speisepläne
 $source = file_get_html('http://www.kstw.de/index.php?option=com_content&view=article&id=182&Itemid=121&lang=de');
 $tbody = $source->find('.Liste',0)->firstChild();
 
 //foreach Mensa
 foreach($tbody->find('tr') as $row)
 {	
+	//get link for Mensa
 	$mensaName = $row->find('td',0)->find('a',0)->plaintext;
 	$dieseWocheLink = $row->find('td',1)->find('a',2)->href;
-	//longitude, latitude SQL
-	
+	//get Mensa html
 	$wochenplanSource = file_get_html("http://www.kstw.de".$dieseWocheLink);
 	$speiseplan = $wochenplanSource->find('html body #page_margins #page #main #col3 #col3_content div.speiseplan', 0);
 	
-	//foreach tagesplan
+	//loop init
 	$speiseplaene = array();
 	$weekday = 1;
+	//for each day's table
 	foreach($speiseplan->find('table.speiseplan tbody') as $tbody)
 	{	
-		$departments = array();
-		
+		//loop init
+		$departments = array();	
 		$currentDepartment = array();
 		$currentMeals = array();
 				
 		$isvalidDepartment = true;
 		
+		//
 		foreach($tbody->find('tr') as $tr)
 		{	
 			$elementNr = count($tr->children());
@@ -40,11 +56,12 @@ foreach($tbody->find('tr') as $row)
 			if($elementNr==5)
 			{
 				//table rows with 5 childNodes contain the name of the
-				//department of
+				//department (e.g. Mensa Nord) the following meals belong to
+				//plus first meal & price
 				
+				//if not first 
 				if(!empty($currentDepartment))
 				{
-					
 					//push meals to department object
 					$currentDepartment["meals"] = $currentMeals;
 					
@@ -72,11 +89,14 @@ foreach($tbody->find('tr') as $row)
 				}
 
 			} 
-			else if($elementNr == 4) {
+			else if($elementNr == 4) 
+			{
+				//table rows with 4 elements contain one meal & price,
+				//belonging to the latest depatment
 				
 				if($tr->children(1)->firstChild()->plaintext != NULL)
 				{
-					//replace '*' and footnotes, push to meals array
+					//replace '*' and Zusatzstoffe footnotes, push to meals array
 					$n = preg_replace ('#\(.*?\)#m' , '' , $tr->firstChild()->plaintext);
 					$currentMeals[] = array(
 						"name" => 	str_replace("*","",$n),
@@ -91,13 +111,15 @@ foreach($tbody->find('tr') as $row)
 		}
 		
 		//if valid department
-		if($isvalidDepartment) {
+		if($isvalidDepartment) 
+		{
 			//push last meals to last department 
 			$currentDepartment["meals"] = $currentMeals;
 
 			//push last department to array
 			$departments[] = $currentDepartment;
 
+			//reset meals
 			$currentMeals = array();	
 		}
 		else {
@@ -106,6 +128,7 @@ foreach($tbody->find('tr') as $row)
 			$currentMeals = array();
 		}
 				
+		//push day's plan to speiseplaene array
 		$speiseplaene[] = array(
 			"weekday"	=>	$weekday,
 			"departments" => $departments
@@ -113,6 +136,7 @@ foreach($tbody->find('tr') as $row)
 		$weekday++;
 	}
 	
+	//push mensa to mensen array 
 	$mensen[] = array(
 		//"name"	=>	$mensaName,
 		"id"	=>	$mensaId,
@@ -122,7 +146,10 @@ foreach($tbody->find('tr') as $row)
 	$mensaId++;
 }
 
-//conversion to output format for a single day
+/**
+ *	Gibt ein als JSON kodiertes Objekt aus, das die Speisen aller Mensen
+ *	für einen Wochentag $day (1-6) enthält.  
+ */
 function printDay($day)
 {
 	global $mensen;
@@ -146,8 +173,8 @@ function printDay($day)
 //write json data for single weekdays to /data/mensa_weekdayX.json
 for($i=1; $i<7; $i++)
 {
-	$handler =µ fOpen("../data/mensa_weekday$i.json", "w");
-	fWrite($handler , printDay($i));
+	$handler = fOpen("../data/mensa_weekday$i.json", "w");
+	fWrite($handler, printDay($i));
 	fClose($handler);
 }
 

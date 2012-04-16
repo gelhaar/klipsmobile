@@ -1,12 +1,15 @@
 <?php
 
+/**
+ * @author Jonas Schophaus */
+
 class Date{
 	
-	/*
-		The getCurrentPeriod Method selects the current
-		Periods dates from the database and returns them as
-		an array of Date objects.
-	*/	
+	/**
+	 *	The getCurrentPeriod Method selects the current
+	 *	Periods dates from the database and returns them as
+	 *	an array of Date objects.
+	 */	
 	public static function getCurrentPeriod()
 	{			
 		global $db;
@@ -21,11 +24,11 @@ class Date{
 		return $st->fetchAll();
 	}
 	
-	/*
-		The getCurrentPeriod Method selects the all 
-		holiday dates from the database and returns them as
-		an array of Date objects.
-	*/
+	/**
+	 *	The getHolidays Method selects all 
+	 *	holiday dates from the database and returns them as
+	 *	an array of Date objects.
+	 */
 	public static function getHolidays()
 	{
 		global $db;
@@ -36,11 +39,11 @@ class Date{
 		//exit;
 	}
 	
-	/*
-		The format function converts period and holiday
-		date objects to match output format specifications
-		and returns an array which is ready for rendering.
-	*/
+	/**
+	 *	The format function converts period and holiday
+	 *	date objects to match output format specifications
+	 *	and returns an array which is ready for rendering.
+	 */
 	public static function format($period, $holidays)
 	{	
 		$fPeriod = array();

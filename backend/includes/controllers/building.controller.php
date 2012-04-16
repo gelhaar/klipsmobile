@@ -1,6 +1,11 @@
 <?php
 
-/* This controller renders the event pages */
+/**
+ * Dieser Controller rendert Antworten auf
+ * Requests nach Buildings.
+ *
+ * @author Jonas Schophaus
+ */
 
 class BuildingController
 {
@@ -23,11 +28,9 @@ class BuildingController
 		}
 		
 		$formattedBuildings = Building::format($buildings);
-		//echo json_encode($formattedBuildings);
 		render('building',array(
 			'buildings'	=> $formattedBuildings
-		));		
-		
+		));			
 	}
 }
 

@@ -2,10 +2,20 @@
 
 require_once "includes/error_reporting.php";
 
-/*
-	This is the index file of our simple website.
-	It routes requets to the appropriate controllers
-*/
+/**
+ *	Dies ist der Index-File unseres API.
+ *	Er leitet den Request und gegebenenfalls zusätzliche als JSON
+ *	empfangene Parameter an den für den angefragte Objekttyp 
+ *	zuständigen Controller weiter.
+ *	Der Zugriff auf die API erfordert eine vorhergehende
+ *	erfolgreiche Authentifizierung.
+ *	
+ *	Jeder Request erfordert mindestens folgende POST-Paramter:
+ *		request = [Objektklasse]
+ *		type	= [Request-Art]
+ *	Optional:	
+ *		(json	= [JSON-Objekt])
+ */
 
 //init session
 session_start();
@@ -75,7 +85,7 @@ try {
 
 catch(Exception $e) 
 {
-	// Display the error page using the "render()" helper function:
+	// display error page using render() function:
 	render('error',array('message'=>$e->getMessage()));
 }
 

@@ -1,12 +1,23 @@
 <?php
 
+/**
+ * @author Jonas Schophaus */
+
 class Comment{
 	
-	/*
-		The setComment method pushes a new comment to the
-		database or overwrites a comment on the same date
-		and lecture.
-	*/	
+	/**
+	 *	Die setComment Methode pusht einen neuen Comment
+	 *	in die Datenbank oder überschreibt einen bereits
+	 *	existierenden Comment am gleichen Datum zur
+	 *	gleichen Lecture.
+	 *	Erfordert input comment im format:
+	 *		Array => 
+	 *			[
+	 *				id		=>	[id]
+	 *				date	=>	[YYYY/MM/DD]
+	 *				comment =>	[string]
+	 *			]
+	 */	
 	public static function setComment($inputcomment)
 	{	
 		global $db;
@@ -44,6 +55,17 @@ class Comment{
 		}
 	}
 	
+	
+	/**
+	 * Die deleteComment() Methode löscht einen
+	 * Comment in der Datenbank.
+	 * Erfordert input comment im Format:
+	 *		Array => 
+	 *			[
+	 *				id		=>	[id]
+	 *				date	=>	[YYYY/MM/DD]
+	 *			]
+	 */
 	public static function deleteComment($inputcomment)
 	{
 		global $db;
@@ -69,6 +91,11 @@ class Comment{
 		}
 	}
 	
+	
+	/**
+	 * Liefert eine Status-Meldung als Comment-
+	 * Response-Objekt zurück.
+	 */
 	public static function formatResponse($bool)
 	{	
 		if($bool) $status = "OK";

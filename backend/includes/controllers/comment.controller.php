@@ -1,6 +1,11 @@
 <?php
 
-/* This controller renders the event pages */
+/**
+ * Dieser Controller rendert Antworten auf
+ * Comment-Requests.
+ *
+ * @author Jonas Schophaus
+ */
 
 class CommentController
 {

@@ -1,8 +1,8 @@
 <?php
 
-/*
-	This file creates a new MySQL connection using the PDO class.
-	The login details are taken from config.php.
+/**
+*	Stellt Verbindung zur MySQL Datenbank her
+*	mittels PDO Object.
 */
 
 try {

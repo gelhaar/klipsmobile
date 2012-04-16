@@ -1,6 +1,11 @@
 <?php
 
-/* This controller renders the event pages */
+/**
+ * Dieser Controller rendert Antworten auf Requests
+ * nach Lecture-Objekten.
+ *
+ * @author Jonas Schophaus
+ */
 
 class EventController
 {
