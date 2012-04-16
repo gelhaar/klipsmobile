@@ -59,7 +59,7 @@ function mensa() {
 		for(var int = 0; int < menus.length; int++) {
 			var mensaMenus = menus[int];
 			
-			var collapsibleHeader = $("<h1 class='mensaName'>"+getMensa(mensaMenus.id).name+"</h1>");
+			var collapsibleHeader = $("<h1><span class='mensaName'>"+getMensa(mensaMenus.id).name+"<span></h1>");
 			
 			$("<a href='#map' class='goToMensaButton' data-role='button' data-mini='true' data-transition='slide' data-ajax='false'>Karte</a>")
 				.data("mensaID", mensaMenus.id)
