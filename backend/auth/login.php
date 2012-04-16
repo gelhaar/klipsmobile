@@ -1,5 +1,13 @@
 <?php
 
+/**
+ *	Authentifieziert den Benutzer.
+ * 	Greift auf die Datenbank zu und holt zum Benutzernamen den passenden Passwort-String.
+ * 	Bei Fehlern landet der Benutzer wieder auf der Login-Seite
+ *
+ *	@author: Benjamin Gelhaar
+ */
+
 require_once "../includes/error_reporting.php";
 
 session_start();

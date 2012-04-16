@@ -4,7 +4,7 @@
  *	Dieses Skript wird vom Frontend in einem festgelegten Zeitinterval aufgerufen.
  *	Es sorgt dafür dass der Cookie valide bleibt.
  *	
- *	Im Moment ist die Lebensdauer auf 3 Minuten gesetzt.
+ *	Im Moment ist die Lebensdauer auf 5 Minuten gesetzt.
  *  
  *	@author: Benjamin Gelhaar
  */

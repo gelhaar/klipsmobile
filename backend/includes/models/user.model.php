@@ -1,10 +1,13 @@
 <?php
 
+/**
+ *	Holt Daten zum Benutzer aus der Datenbank und überprüft den Satus der Session.
+ *
+ *	@author Benjamin Gelhaar
+ */
+ 
 class User{
 	
-	/*
-		Gets information about the User and the Session
-	*/	
 	public static function getSessionName()
 	{	
 	

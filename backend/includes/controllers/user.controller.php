@@ -1,8 +1,10 @@
 <?php
 
 /**
- * 
- * @author Benjamin Gelhaar
+ *	Leitet die benutzerspezifischen Anfragen an das Backend
+ *	an die richtigen Funktionen des Models weiter.
+ *
+ *	@author Benjamin Gelhaar
  */
 
 class UserController

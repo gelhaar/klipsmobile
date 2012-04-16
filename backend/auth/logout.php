@@ -1,5 +1,9 @@
 <?php
-
+/**
+ *	Loggt den Benutzer aus: Leert und löscht die Session.
+ *
+ *	@author: Benjamin Gelhaar
+ */
 require_once "../includes/error_reporting.php";
 
 session_start();
