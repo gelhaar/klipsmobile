@@ -1,21 +1,30 @@
+/**
+ * Aktuelles-Modul
+ * @author Roman Quiring
+ */
+
 function start() {
 	
+	//Konstruktor
 	if(typeof(_start_prototype_called) === "undefined") {
 		_start_prototype_called = true;
 		start.prototype.initStartPage = initStartPage;
 	}
 	
+	/**
+	 * Füllt den "Aktuelles"-Tab mit einer Liste der kommenden Veranstaltungen und Termine.
+	 */
 	function initStartPage() {
 		
 		var eventList = $("<ul data-role='listview' data-inset='true'></ul>");
 			
-		//lectures
+		//Veranstaltungen
 		$(eventList).append("<li data-role='list-divider'>Veranstaltungen:</li>");
 		
 		var lectures = schedule.getNextLectures();
 		
 		if(lectures.length === 0) {
-			$("<li><div>keine Veranstaltungen in den kommenden 3 Tagen</div></li>").appendTo(eventList);
+			$("<li><div>keine Veranstaltungen in den kommenden 3 Tagen.</div></li>").appendTo(eventList);
 		}
 		
 		for (var int = 0; int < lectures.length; int++) {
@@ -53,13 +62,13 @@ function start() {
 				.appendTo(eventList);
 		}
 		
-		//dates
+		//Termine
 		$(eventList).append("<li data-role='list-divider'>Termine:</li>");
 		
-		var nextDates = dates.getNextDates();
+		var nextDates = dates.getNextDates(7, null);
 		
 		if(nextDates.length === 0) {
-			$("<li><div>keine Termine in den kommenden 3 Tagen</div></li>").appendTo(eventList);
+			$("<li><div>keine Termine in der nächsten Woche.</div></li>").appendTo(eventList);
 		}
 		
 		for (var int = 0; int < nextDates.length; int++) {

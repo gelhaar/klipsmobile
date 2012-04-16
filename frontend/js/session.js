@@ -4,13 +4,11 @@ function session() {
 		_session_prototype_called = true;
 		session.prototype.initUsername = initUsername;
 		session.prototype.ping = ping;
-		
-		initUsername();
 	}
 	
 	function initUsername() {
 		$.ajax({		
-			async: false,
+			async: true,
 			type: "POST",
 			url: "../backend/ajax.php",
 			data: "request=User&type=getName",
@@ -19,17 +17,15 @@ function session() {
 				$(".userName").html(data.username);
 			}
 		});
-	
-		
 	}
 
-	 function ping() {
+	function ping() {
 		$.ajax({
 			type: "POST",
 			url: "../backend/auth/ping.php",
 			data: "",
 			success: function(data) {}
 		});
- 	}
+	}
 	
 }

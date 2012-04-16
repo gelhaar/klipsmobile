@@ -155,13 +155,14 @@
 						</div>
 					</div>
 					
-					<fieldset data-role="controlgroup" data-type="horizontal">
-						<select name="travelModeSelect" id="travelModeSelect" data-native-menu="false">
+<!-- 					<fieldset data-role="controlgroup" data-type="horizontal" class="ui-disabled"> -->
+						<select name="directionsSelect" id="directionsSelect" data-native-menu="false" data-inline="true" disabled="disabled">
+							<option>Weg zeigen</option>
 							<option value="foot">laufen</option>
 							<option value="car">fahren</option>
 						</select>
-						<a href="#" data-role="button" data-rel="popup" id="directionsButton" class="ui-disabled">Weg zeigen</a>
-					</fieldset>
+						<a href="#" data-role="button" data-rel="popup" id="removeDirectionsButton"  data-iconpos="notext" data-icon="delete" data-inline="true" class="ui-disabled"></a>
+<!-- 					</fieldset> -->
 				</div>
 				<div id="mapContainer"></div>
 			</div>

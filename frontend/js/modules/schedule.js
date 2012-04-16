@@ -13,14 +13,14 @@ function schedule() {
 		schedule.prototype.initScheduleView = initScheduleView;
 		schedule.prototype.getNextLectures = getNextLectures;
 		schedule.prototype.render = render;
-		schedule.prototype.reset = reset;
+//		schedule.prototype.reset = reset;
 		schedule.prototype.showLecture = showLecture;
 		
-		initEvents();
+		initLectures();
 		initHolidays();
 	}
 
-	function initEvents() {
+	function initLectures() {
 		$.ajax({
 			async: false,
 			type: "POST",
@@ -269,7 +269,7 @@ function schedule() {
 	
 	function showLecture(lecture) {
 		$("#lecturePopupHeader > h1").html(lecture.title);
-		
+				
 		var lectureDetails = $("<table id='lectureDetails'></table>")
 			.append("<tr>" +
 						"<td class='lectureDetailsCaption'>Zeit:</td>" +
@@ -285,7 +285,7 @@ function schedule() {
 						"<td class='lectureDetailsCaption'>Gebäude:</td>" +
 						"<td>"+map.getBuilding(lecture.buildingId).name+"</td>" +
 						"<td>" +
-							"<a href='#map' id='goToBuildingButton' data-role='button' data-mini='true' data-transition='slide'>zeigen</a>" + 
+							"<a href='#map' id='goToBuildingButton' data-role='button' data-mini='true' data-transition='slide'>Karte</a>" + 
 						"</td>" +
 					"</tr>")
 			.append("<tr>" +
@@ -449,12 +449,12 @@ function schedule() {
 		calendar.fullCalendar("render");
 		$(".lectureEvent").width($(".fc-day-content").width());
 	};
-	
-	function reset() {
-		//if the lecture-popup is visible, the user navigated there from the calendar and will navigate back -> no reset
-		if(!$("#lecturePopup").is(":visible"))
-			calendar.fullCalendar("today");
-	}
+//	 TODO
+//	function reset() {
+//		//if the lecture-popup is visible, the user navigated there from the calendar and will navigate back -> no reset
+//		if(!$("#lecturePopup").is(":visible"))
+//			calendar.fullCalendar("today");
+//	}
 
 	function setComment(lecture, comment) {
 		
@@ -475,6 +475,7 @@ function schedule() {
 		commentObject.id = id;
 		commentObject.date = date;
 		commentObject.comment = comment;
+		
 		var commentJSON = JSON.stringify(commentObject);
 		
 		$.ajax({
@@ -493,6 +494,13 @@ function schedule() {
 						var commentObject = new Object();
 						commentObject.text = comment;
 						commentObject.date = date;
+						
+						for (var int = 0; int < lecture.comments.length; int++) {
+							if(date === lecture.comments[int].date) {
+								lecture.comments.pop(int);
+								break;	
+							}
+						}
 						
 						lecture.comments.push(commentObject);
 					}

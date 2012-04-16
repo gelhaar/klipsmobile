@@ -1,16 +1,12 @@
 var contentHeight;
 
-var init = true;
-
-//document.ontouchmove = function(e){ e.preventDefault(); };
+var init = true; //TODO ?
 
 $(document).live("mobileinit", function(){
 	
 	//override defaults
 	$.mobile.dialog.prototype.options.closeBtnText = "Schließen";
 	$.mobile.loadingMessage = "Lade...";
-//	$.mobile.ajaxLinksEnabled = false; //wichtig für login-formular
-//	$.mobile.hashListeningEnabled = false; //reload führt zur startseite
 	
 	//module pre-init
 	dateHelper = new dateHelper();
@@ -39,14 +35,12 @@ $(document).live("mobileinit", function(){
 			$("#schedule > .content").height(getContentHeight());
 			$("#schedule").trigger("updatelayout");
 
-			//safari fix: if render is called directly the scrollbar is still shown -> event-width == 100% - scrollbar-width
-//			setTimeout(function(){ 
-				schedule.render(); //TODO
-//			}, 10);
-		})
-		.live("pagehide", function() {
-			schedule.reset();
+			//TODO safari fix: if render is called directly the scrollbar is still shown -> event-width == 100% - scrollbar-width
+			schedule.render();
 		});
+//		.live("pagehide", function() {
+//			schedule.reset();
+//		});
 
 	$("#map")
 		.live("pagecreate", function() {
@@ -63,7 +57,7 @@ $(document).live("mobileinit", function(){
 			mensa.initMensaView();
 		})
 		.live("pageshow", function() {
-			$("#mensa").height(getContentHeight());
+			$("#mensa > .content").height(getContentHeight());
 			$("#mensa").trigger("updatelayout");
 		});
 
@@ -83,7 +77,7 @@ $(document).live("mobileinit", function(){
 		session.initUsername();
 	});
 	
-	//ping 
+	//ping server every minute
 	setInterval(session.ping, 60000);
 });
 

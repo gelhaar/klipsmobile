@@ -18,12 +18,13 @@
 .ui-btn {
 	box-shadow: none;
 	outline:none;
+	font-size: 0.8em;
 }
 
 .logoutBar {
 	padding: 0.3em;
 	background-color: #EBEFF5;
-	font-size: 0.8em;
+/* 	font-size: 0.8em; */
 	font-weight: normal;
 	color: #555555;
 	text-shadow: 0 1px 1px #D7D7D7;
@@ -43,11 +44,12 @@
 }
 
 .logoutButton .ui-btn-inner {
-	padding: 0.2em !important;
+	padding: 0.2em 0.4em !important;
 } 
 
 .userInfo {
-	line-height: 2em;
+	font-size: 0.9em;
+	line-height: 1.8em;
 	vertical-align: middle;
 }
 
@@ -58,7 +60,7 @@
 }
 
 #upcomingEvents ul li a {
-	font-size: 0.9em;
+	font-size: 1.1em !important;
 	font-weight: bold;
 	white-space: normal;
 }
@@ -93,6 +95,7 @@
 }
 
 .fc-event-head {
+	padding: 0.1em 0.2em;
 	display: none;
 	text-shadow: none;
 /* 	font-size: 0.8em; */
@@ -103,6 +106,7 @@
 	color: #ffffff;
 	text-shadow: none;
 	border: 0;
+	padding: 0.2em;
 }
 
 .fc-day-content {
@@ -151,62 +155,89 @@
 
 /* MENSA */
 
+#mensaList {
+	margin: 0;
+}
+
+#mensaList div div, 
+#mensaList div h1 {
+	margin: 0;
+	font-size: 1em !important;
+}
+
+.mensaName a .ui-btn-inner{
+/* 	padding-right: 0.5em; */
+/* 	line-height: 1.2em; */
+
+}
+
+.mensaName a .ui-btn-inner .ui-btn-text {
+/* 	margin-top: 2em; */
+/* 	line-height: 2em; */
+/* 	vertical-align: middle; */
+
+float: left;
+}
+
+.mensaName a .ui-btn-inner .ui-btn-corner-all {
+/* 	line-height: 2em;; */
+}
+
+/* .mensaName .ui-icon { */
+/* 	padding-right: 0 ; */
+/* 	padding-top: 0; */
+/* } */
+
 .menuName {
 	font-weight: bold;
+	font-size: 1em !important;
 }
 
-.price {
-/* 	margin-bottom: 0.5em;	 */
+.meal {
+	font-size: 1em !important;
+	margin-top: 0.5em !important;
 }
 
-.mensaMenu .meal:last-child .price {
-/* 	margin-bottom: 0; */
+.goToMensaButton {
+	float: right;
+}
+.goToMensaButton .ui-btn-inner {
+	font-size: 1.3em !important;
+	padding: 0 0.4em 0.5em 0.4em !important;
+/* 	position: absolute; */
+/* 	right: 0; */
+/* 	top: 0; */
 }
 
+.goToMensaButton .ui-btn-text {
+	padding: 0 !important;
+}
 
 /* KARTE */
 
-#mapOptions { /* Hack -> outerHeight() */
-/* 	border-bottom: solid #ffffff 0.5em; */
-	height: 5.5em;
-/* margin: 0; */
+#mapOptions { 
+	height: 5em;
 	text-align: center;
 }
 
-#mapOptions .ui-block-a {
-	text-align: left;
+#mapOptions .ui-grid-a {
+	margin-bottom: 0.5em;
 }
 
-#mapOptions .ui-block-b {
-	text-align: right;
+#buildingSelect-button,
+#mensaSelect-button {
+	max-width: 11em !important;
 }
 
-#mapOptions .ui-btn {
-/* 	box-shadow: none; */
-/* 	outline:none; */
-	font-size: 0.8em;
-/* 	height: 2.5em; */
+#mapOptions .ui-select {
+	display: inline;
 }
 
-#mapOptions .ui-controlgroup {
-/* 	margin-bottom: 5.5em; */
-/* margin: 0; */
-}
-
-#gpsSelect-button {
-	box-shadow: none;
-	border-bottom-left-radius: 0.5em;
-	border-top-left-radius: 0.5em;
-}
-
-#goToBuildingButton {
-	border-bottom-right-radius: 0.5em;
-	border-top-right-radius: 0.5em;
+#removeDirectionsButton {
+	margin-left: 0.5em 0 0 0.5em;	
 }
 
 #mapContainer {
-/* 	width: 100%; */
-/* 	height: 100%; */
 	border: 1px solid #d7d7d7;
 }
 
@@ -249,10 +280,6 @@
 
 #lecturePopupBackButton span.ui-btn-inner {
 	padding-left: 11px;
-}
-
-#lectureDetails {
-/* 	width: 100%; */
 }
 
 .lectureDetailsCaption {

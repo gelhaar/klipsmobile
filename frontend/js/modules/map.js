@@ -22,7 +22,7 @@ function map() {
 		map.prototype.render = render;
 		map.prototype.initMapView = initMapView;
 		map.prototype.showBuilding = showBuilding;
-		
+		map.prototype.showMensa = showMensa;
 		map.prototype.getBuilding = getBuilding;
 		
 		initBuildings();
@@ -51,7 +51,7 @@ function map() {
 	
 	function initMapView() {
 		
-		//buildings
+		//Gebäude
 		for (var int = 0; int < buildings.length; int++) {
 			var building = buildings[int];
 			$("#buildingSelect").append("<option value='"+building.id+"'>"+building.name+"</option>");
@@ -61,14 +61,16 @@ function map() {
 			showBuilding($(this).val());
 			render();
 			
-			$("#directionsButton").removeClass("ui-disabled");
-
+			$("#directionsSelect").selectmenu("enable");
 			resetSelectMenu("mensa");
 			
-			directionsDisplay.setMap(null);
+			//wenn gerade ein Weg angezeigt wird, soll der Weg zum neu ausgewählten Gebäude angezeigt werden
+			if(directionsDisplay.getMap() !== undefined) {
+				getDirectionsToBuildingOrMensa();
+			}
 		});
 		
-		//mensen
+		//Mensen
 		var mensen = mensa.getMensen();
 		for (var int = 0; int < mensen.length; int++) {
 			var singleMensa = mensen[int];
@@ -79,36 +81,39 @@ function map() {
 		$("#mensaSelect").change(function(){
 			showMensa($(this).val());
 			render();
-			$("#directionsButton").removeClass("ui-disabled");
 			
+			$("#directionsSelect").selectmenu("enable");
 			resetSelectMenu("building");
 			
-			directionsDisplay.setMap(null);;
-		});
-		
-		//directions
-		$("#travelModeSelect").change(function() {
-			getDirectionsToBuildingOrMensa();
-		});
-		
-		$("#directionsButton").live("tap", function(){ //TODO button weg! nur menü!
-			var textElement = $(this).find(".ui-btn-text");
-			if(textElement.text() === "Weg zeigen") {
+			if(directionsDisplay.getMap() !== undefined) {
 				getDirectionsToBuildingOrMensa();
-				$(textElement).text("verbergen");
 			}
-			else { //reset
-				$(textElement).text("Weg zeigen");
-				directionsDisplay.setMap(null);
-				$(this).addClass("ui-disabled");
-				resetSelectMenu();
+		});
+		
+		//Directions
+		$("#directionsSelect").change(function() {
+			getDirectionsToBuildingOrMensa();
+			$("#removeDirectionsButton").removeClass("ui-disabled");
+		});
+		
+		$("#removeDirectionsButton").live("tap", function(){
+			directionsDisplay.setMap(null);
+			$(this).addClass("ui-disabled");
+			resetSelectMenu("directions");
+			
+			if(parseInt($("#buildingSelect").val())) {
+				showBuilding($("#buildingSelect").val());
 			}
+			else if(parseInt($("#mensaSelect").val())) {
+				showMensa($("#mensaSelect").val());
+			}
+			render();
 		});
 	}
 	
 	/**
 	 * Hilfsfunktion für initMapView().
-	 * @param menu String "building" oder "mensa". Wenn nicht angegeben, werden beide Menüs zurückgesetzt.
+	 * @param menu String "building", "mensa" oder "directions".
 	 */
 	function resetSelectMenu(menu) {
 		if(menu === "building") {
@@ -121,13 +126,10 @@ function map() {
 			$("#mensaSelect option:first").attr("selected", "selected");
 			$("#mensaSelect").selectmenu("refresh");
 		}
-		else {
-			$("#buildingSelect option:selected").removeAttr("selected");
-			$("#buildingSelect option:first").attr("selected", "selected");
-			$("#buildingSelect").selectmenu("refresh");
-			$("#mensaSelect option:selected").removeAttr("selected");
-			$("#mensaSelect option:first").attr("selected", "selected");
-			$("#mensaSelect").selectmenu("refresh");
+		else if(menu === "directions") {
+			$("#directionsSelect option:selected").removeAttr("selected");
+			$("#directionsSelect option:first").attr("selected", "selected");
+			$("#directionsSelect").selectmenu("refresh");
 		}
 	}
 	
@@ -142,7 +144,7 @@ function map() {
 		if(markerToShow !== undefined) {
 			var latLng = new google.maps.LatLng(markerToShow.latitude, markerToShow.longitude);
 			showMarker(latLng, markerToShow.name);
-			
+
 			if(markerToShow.type === "building") {
 				$("#buildingSelect").val(markerToShow.id); 
 				$("#buildingSelect").selectmenu("refresh");
@@ -184,13 +186,13 @@ function map() {
 	
 	function showMensa(id) {
 		var singleMensa = mensa.getMensa(id);
-        
-        markerToShow = new Object();
-        markerToShow.type = "mensa";
-        markerToShow.id = id;
-        markerToShow.name = singleMensa.name;
-        markerToShow.latitude = singleMensa.lat;
-        markerToShow.longitude = singleMensa.long;   
+
+		markerToShow = new Object();
+		markerToShow.type = "mensa";
+		markerToShow.id = id;
+		markerToShow.name = singleMensa.name;
+		markerToShow.latitude = singleMensa.lat;
+		markerToShow.longitude = singleMensa.long;	
 	}
 	
 	function showMarker(latLng, title, window) {
@@ -225,13 +227,13 @@ function map() {
 		}
 		else if(parseInt($("#mensaSelect").val())) {
 			var singleMensa = mensa.getMensa($("#mensaSelect").val());
-			latLng = new google.maps.LatLng(singleMensa.latitude, singleMensa.longitude);
+			latLng = new google.maps.LatLng(singleMensa.lat, singleMensa.long);
 		}
 		
 		if(latLng != null) {
 		
 			var travelMode;
-			if($("#travelModeSelect").val() === "car")
+			if($("#directionsSelect").val() === "car")
 				travelMode = google.maps.DirectionsTravelMode.DRIVING;
 			else
 				travelMode = google.maps.DirectionsTravelMode.WALKING;
