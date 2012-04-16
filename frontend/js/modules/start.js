@@ -1,5 +1,5 @@
 /**
- * Aktuelles-Modul
+ * Aktuelles-Modul.
  * @author Roman Quiring
  */
 

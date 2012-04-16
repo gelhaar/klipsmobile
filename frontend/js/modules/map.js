@@ -1,18 +1,23 @@
+/**
+ * Karten-Modul.
+ * @author Roman Quiring
+ */
+
 function map() {
 	
 	var buildings = null;
+	
 	var gMap = null;
+	
+	var marker = null;
+	var markerToShow;
+	
 	var initialLocation = new google.maps.LatLng(50.928256, 6.929184); //Hauptgebäude
 	
 	var directionsService = new google.maps.DirectionsService();
 	var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers : true});
 	
-	var marker = null;
-	var infoWindow = new google.maps.InfoWindow();
-	
 	var defaultZoom = 17;
-	
-	var markerToShow;
 	
 	var init = true; //wird fürs erste Rendering gebraucht
 	
@@ -28,6 +33,9 @@ function map() {
 		initBuildings();
 	}
 	
+	/**
+	 * Führt einen AJAX-Request aus und initialisiert das buildings-Array.
+	 */
 	function initBuildings() {
 		$.ajax({
 			async: false,
@@ -41,6 +49,11 @@ function map() {
 		});
 	}
 	
+	/**
+	 * Gibt das Gebäude zurück, das der übergebenen ID entspricht.
+	 * @param id die Gebäude-ID
+	 * @returns ein Gebäude-Objekt.
+	 */
 	function getBuilding(id) {
 		for (var int = 0; int < buildings.length; int++) {
 			var building = buildings[int];
@@ -49,6 +62,9 @@ function map() {
 		}
 	}
 	
+	/**
+	 * Initialisiert die Optionen zur Kartennavigation.
+	 */
 	function initMapView() {
 		
 		//Gebäude
@@ -62,7 +78,9 @@ function map() {
 			render();
 			
 			$("#directionsSelect").selectmenu("enable");
-			resetSelectMenu("mensa");
+			$("#mensaSelect option:selected").removeAttr("selected");
+			$("#mensaSelect option:first").attr("selected", "selected");
+			$("#mensaSelect").selectmenu("refresh");
 			
 			//wenn gerade ein Weg angezeigt wird, soll der Weg zum neu ausgewählten Gebäude angezeigt werden
 			if(directionsDisplay.getMap() !== undefined) {
@@ -83,7 +101,9 @@ function map() {
 			render();
 			
 			$("#directionsSelect").selectmenu("enable");
-			resetSelectMenu("building");
+			$("#buildingSelect option:selected").removeAttr("selected");
+			$("#buildingSelect option:first").attr("selected", "selected");
+			$("#buildingSelect").selectmenu("refresh");
 			
 			if(directionsDisplay.getMap() !== undefined) {
 				getDirectionsToBuildingOrMensa();
@@ -99,7 +119,9 @@ function map() {
 		$("#removeDirectionsButton").live("tap", function(){
 			directionsDisplay.setMap(null);
 			$(this).addClass("ui-disabled");
-			resetSelectMenu("directions");
+			$("#directionsSelect option:selected").removeAttr("selected");
+			$("#directionsSelect option:first").attr("selected", "selected");
+			$("#directionsSelect").selectmenu("refresh");
 			
 			if(parseInt($("#buildingSelect").val())) {
 				showBuilding($("#buildingSelect").val());
@@ -112,32 +134,14 @@ function map() {
 	}
 	
 	/**
-	 * Hilfsfunktion für initMapView().
-	 * @param menu String "building", "mensa" oder "directions".
+	 * Initialisiert die Karte, falls dies noch nicht geschehen ist.
+	 * Zeigt einen Marker auf der Karte an, falls markerToShow gesetzt wurde.
+	 * Rendert die Karte.
 	 */
-	function resetSelectMenu(menu) {
-		if(menu === "building") {
-			$("#buildingSelect option:selected").removeAttr("selected");
-			$("#buildingSelect option:first").attr("selected", "selected");
-			$("#buildingSelect").selectmenu("refresh");
-		}
-		else if(menu === "mensa") {
-			$("#mensaSelect option:selected").removeAttr("selected");
-			$("#mensaSelect option:first").attr("selected", "selected");
-			$("#mensaSelect").selectmenu("refresh");
-		}
-		else if(menu === "directions") {
-			$("#directionsSelect option:selected").removeAttr("selected");
-			$("#directionsSelect option:first").attr("selected", "selected");
-			$("#directionsSelect").selectmenu("refresh");
-		}
-	}
-	
 	function render() {
 		
 		if(init) {
 			initMap();
-//			showBuilding($("#buildingSelect").val());
 			init = false;
 		}
 		
@@ -160,19 +164,24 @@ function map() {
 		google.maps.event.trigger(gMap, "resize");
 	};
 
-
+	/**
+	 * Initialisiert die Karte.
+	 */
 	function initMap() {
 	    var mapOptions = {
 	      zoom: defaultZoom,
 	      center: initialLocation,
 	      mapTypeId: google.maps.MapTypeId.ROADMAP,
 	      disableDefaultUI: true
-//	      zoomControl: true
 	    };
 	    
 	    gMap = new google.maps.Map($("#mapContainer")[0], mapOptions);
 	}
 	
+	/**
+	 * Setzt die Position von markerToShow auf die des Gebäudes, das der übergebenen ID entspricht.  
+	 * @param id die Gebäude-ID
+	 */
 	function showBuilding(id) {
 		var building = getBuilding(id);
 		
@@ -184,6 +193,10 @@ function map() {
 		markerToShow.longitude = building.longitude;
 	}
 	
+	/**
+	 * Setzt die Position von markerToShow auf die der Mensa, die der übergebenen ID entspricht.  
+	 * @param id die Mensa-ID
+	 */
 	function showMensa(id) {
 		var singleMensa = mensa.getMensa(id);
 
@@ -195,9 +208,12 @@ function map() {
 		markerToShow.longitude = singleMensa.long;	
 	}
 	
-	function showMarker(latLng, title, window) {
-		
-		var showWindow = window === undefined || window === null ? true : false;
+	/**
+	 * Zeigt einen Marker auf der Karte an. 
+	 * @param latLng ein Objekt des Typs google.maps.LatLng.
+	 * @param title der Titel des Markers.
+	 */
+	function showMarker(latLng, title) {
 		gMap.setZoom(defaultZoom);
 		gMap.panTo(latLng);		
 		
@@ -210,14 +226,11 @@ function map() {
 		    title: title,
 		    bounds: true
 		});
-		
-//		if(showWindow) { //TODO wtf
-//			infoWindow.setContent(title);
-//			infoWindow.close();
-//			infoWindow.open(map, marker);
-//		}
 	}
 	
+	/**
+	 * Überprüft, ob ein Gebäude oder eine Mensa ausgewählt ist und zeigt den Weg dorthin an.
+	 */
 	function getDirectionsToBuildingOrMensa() {
 
 		var latLng = null;
@@ -242,8 +255,12 @@ function map() {
 		}
 	}
 	
+	/**
+	 * Zeigt den Weg mit Hilfe eines angegebenen Fortbewegungsmittels von der aktuellen Position des Benutzers zu einem übergebenen Punkt.
+	 * @param latLng ein Objekt des Typs google.maps.LatLng.
+	 * @param travelMode ein Objekt des Typs google.maps.DirectionsTravelMode.
+	 */
 	function getDirectionsToLatLng(latLng, travelMode) {
-
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(position) {
 				var origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -264,7 +281,6 @@ function map() {
 				alert(error);
 			});
 		}
-		
 	}
 	
 }

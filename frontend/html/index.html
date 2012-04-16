@@ -5,16 +5,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>KLIPSmobile</title>
 		
-		<script src="js/lib/jquery-1.7.2.min.js"></script>
-		
-<!-- 		<script src="../js/lib/jquery-ui-1.8.17.custom.min.js"></script> -->
-<!-- 		<link rel="stylesheet" href="../css/jquery-ui-1.8.17.custom.css" /> -->
-		
-		<script type="text/javascript" src="js/lib/jquery.ui.map.full.min.js"></script>
-		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script type="text/javascript" src="js/lib/jquery-1.7.2.min.js"></script>
 		
 		<script type="text/javascript" src="js/lib/fullcalendar.min.js"></script>
 		<link rel="stylesheet" href="css/fullcalendar.css" />
+		
+		<script type="text/javascript" src="js/lib/jquery.ui.map.full.min.js"></script>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 		
 		<script type="text/javascript" src="js/dateHelper.js"></script>
 		<script type="text/javascript" src="js/session.js"></script>
@@ -30,12 +27,7 @@
 		
 		<link rel="stylesheet" href="css/jquery.mobile.structure-1.1.0-rc.2.min.css" />
 		<script src="js/lib/jquery.mobile-1.1.0-rc.2.min.js"></script>
-<!-- 		<link rel="stylesheet" href="../css/jquery.mobile-1.1.0-rc.2.min.css" /> -->
 		
-<!-- 		<script type="text/javascript" src="../js/lib/jquery.easing.1.3.js"></script> -->
-<!-- 		<script type="text/javascript" src="../js/lib/jquery.mobile.scrollview.js"></script> -->
-<!-- 		<link rel="stylesheet" href="../js/lib/jquery.mobile.scrollview.css" /> -->
-<!-- 		<script type="text/javascript" src="../js/lib/scrollview.js"></script> -->
 	</head>
 	<body> 
 	
@@ -154,15 +146,12 @@
 							</select>
 						</div>
 					</div>
-					
-<!-- 					<fieldset data-role="controlgroup" data-type="horizontal" class="ui-disabled"> -->
-						<select name="directionsSelect" id="directionsSelect" data-native-menu="false" data-inline="true" disabled="disabled">
-							<option>Weg zeigen</option>
-							<option value="foot">laufen</option>
-							<option value="car">fahren</option>
-						</select>
-						<a href="#" data-role="button" data-rel="popup" id="removeDirectionsButton"  data-iconpos="notext" data-icon="delete" data-inline="true" class="ui-disabled"></a>
-<!-- 					</fieldset> -->
+					<select name="directionsSelect" id="directionsSelect" data-native-menu="false" data-inline="true" disabled="disabled">
+						<option>Weg zeigen</option>
+						<option value="foot">laufen</option>
+						<option value="car">fahren</option>
+					</select>
+					<a href="#" data-role="button" data-rel="popup" id="removeDirectionsButton"  data-iconpos="notext" data-icon="delete" data-inline="true" class="ui-disabled"></a>
 				</div>
 				<div id="mapContainer"></div>
 			</div>
@@ -228,7 +217,7 @@
 			<div data-role="content" id="lecturePopupContent"></div>
 			
 			<div data-role="footer" id="lecturePopupFooter">
-				<a data-rel="back" data-role="button" data-inline="true" data-icon="back" id="lecturePopupBackButton">zur&uuml;ck</a>
+				<a data-rel="back" data-role="button" data-inline="true" data-icon="back" id="lecturePopupBackButton">zurück</a>
 			</div>
 			
 		</div>

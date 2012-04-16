@@ -1,3 +1,8 @@
+/**
+ * Mensa-Modul.
+ * @author Roman Quiring
+ */
+
 function mensa() {
 	
 	var mensen = new Array();
@@ -14,6 +19,9 @@ function mensa() {
 		initMenus();
 	}
 	
+	/**
+	 * Führt einen AJAX-Request aus und befüllt das Mensen-Array.
+	 */
 	function initMensen() {
 		$.ajax({
 			async: false,
@@ -27,6 +35,9 @@ function mensa() {
 		});
 	}
 	
+	/**
+	 * Führt einen AJAX-Request aus und befüllt das Menus-Array.
+	 */
 	function initMenus() {
 		$.ajax({
 			async: false,
@@ -40,6 +51,9 @@ function mensa() {
 		});
 	}
 	
+	/**
+	 * Füllt den "Mensa"-Tab mit einer "Accordion"-Liste aller Mensen und Speisepläne.
+	 */
 	function initMensaView() {
 
 		for(var int = 0; int < menus.length; int++) {
@@ -49,8 +63,6 @@ function mensa() {
 			
 			$("<a href='#map' class='goToMensaButton' data-role='button' data-mini='true' data-transition='slide' data-ajax='false'>Karte</a>")
 				.data("mensaID", mensaMenus.id)
-//				.button()
-//				.unbind("tap")
 				.bind("tap click", function(event){
 					event.stopPropagation();
 					map.showMensa($(this).data("mensaID")); 
@@ -90,10 +102,19 @@ function mensa() {
 		$("#mensa").page();
 	}
 	
+	/**
+	 * Gibt alle Mensen zurück.
+	 * @returns {Array}
+	 */
 	function getMensen() {
 		return mensen;
 	}
 	
+	/**
+	 * Gibt die Mensa zurück, die der übergebenen ID entspricht.
+	 * @param id die Mensa-ID
+	 * @returns ein Mensa-Objekt.
+	 */
 	function getMensa(id) {
 		for(var int = 0; int < mensen.length; int++) {
 			if(id == mensen[int].id) {
@@ -101,4 +122,5 @@ function mensa() {
 			}
 		}
 	}
+	
 }

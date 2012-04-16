@@ -1,14 +1,19 @@
-var contentHeight;
+/**
+ * Initialisierung aller Komponenten.
+ * @author Roman Quiring
+ */
 
-var init = true; //TODO ?
-
+/**
+ * Einstiegspunkt des Scriptes. Wird aufgerufen, sobald das JQM-DOM-Modell geladen ist.
+ * Initialisiert alle Module und bindet sie an die entsprechenden Seiten.
+ */
 $(document).live("mobileinit", function(){
 	
-	//override defaults
+	//Defaults überschreiben
 	$.mobile.dialog.prototype.options.closeBtnText = "Schließen";
 	$.mobile.loadingMessage = "Lade...";
 	
-	//module pre-init
+	//Module initialisieren
 	dateHelper = new dateHelper();
 	session = new session();
 	dates = new dates();
@@ -17,7 +22,7 @@ $(document).live("mobileinit", function(){
 	schedule = new schedule();
 	start = new start();
 	
-	//module init
+	//Module an Seiten binden
 	$("#start")
 		.live("pagecreate", function() {
 			start.initStartPage();
@@ -34,13 +39,8 @@ $(document).live("mobileinit", function(){
 		.live("pageshow", function() {
 			$("#schedule > .content").height(getContentHeight());
 			$("#schedule").trigger("updatelayout");
-
-			//TODO safari fix: if render is called directly the scrollbar is still shown -> event-width == 100% - scrollbar-width
 			schedule.render();
 		});
-//		.live("pagehide", function() {
-//			schedule.reset();
-//		});
 
 	$("#map")
 		.live("pagecreate", function() {
@@ -69,55 +69,22 @@ $(document).live("mobileinit", function(){
 			$("#dates > .content").height(getContentHeight());
 			$("#dates").trigger("updatelayout");
 		});
-	
-//	$(window).bind("orientationchange resize pageshow", fixgeometry);
 
-	//init username + logout-bar
+	//Benutzername anzeigen
 	$(window).one("pagecreate", function() {
 		session.initUsername();
 	});
 	
-	//ping server every minute
+	//Jede Minute den Server pingen
 	setInterval(session.ping, 60000);
 });
 
-
+/**
+ * Gibt die maximale Höhe des aktuell sichtbaren Content-Bereichs zurück.
+ * @returns {Number}
+ */
 function getContentHeight() {
 	var contentHeight =  $(window).height() - $(".header:visible").outerHeight() - $(".footer:visible").outerHeight();
 	contentHeight -= ($(".content:visible").outerHeight() - $(".content:visible").height());
     return contentHeight;
 }
-
-
-
-
-var fixgeometry = function() {
-//    /* Some orientation changes leave the scroll position at something that isn't 0,0. This is annoying for user experience. */
-//    scroll(0, 0);
-//
-//    var content = $(".content:visible");
-//    
-//    if(contentHeight === undefined) {
-//    
-//	    var header = $(".header:visible");
-//	    var footer = $(".footer:visible");
-//	    var viewport_height = $(window).height();
-//	    
-//	    /* Calculate the geometry that our content area should take */
-//	    contentHeight = viewport_height - header.outerHeight() - footer.outerHeight();
-//	    /* Trim margin/border/padding height */
-//	    contentHeight -= (content.outerHeight() - content.height());
-//    }
-////    console.log("fix "+contentHeight);
-//    
-////    content.height(contentHeight);
-	
-	getContentHeight();
-
-	$("#one > .content").height(contentHeight);
-	$("#two > .content").height(contentHeight);
-	$("#three > .content").height(contentHeight);
-	$("#four > .content").height(contentHeight);
-	
-	$("#mapContainer").height(contentHeight - $("#mapOptions").height());
-  };
